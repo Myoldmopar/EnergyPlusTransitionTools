@@ -1,0 +1,7 @@
+[run]
+source = ep_transition
+
+[report]
+omit =
+    */ep_transition/gui.py
+    */ep_transition/runner.py

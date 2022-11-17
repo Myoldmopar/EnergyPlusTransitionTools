@@ -1,7 +1,8 @@
+.coverage
 *.pyc
 build
 dist
 .DS_Store
 .idea
 _build
-
+*.egg-info

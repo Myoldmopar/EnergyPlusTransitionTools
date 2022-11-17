@@ -1,8 +1,4 @@
-import os
-import sys
 import unittest
-
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'IDFVersionUpdater'))
 
 
 # EnergyPlusPath is entirely based on an existing installation, so it doesn't make it easy to unit test on a standalone
