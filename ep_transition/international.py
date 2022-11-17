@@ -1,18 +1,17 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+from enum import Enum, auto
 
 
-class Languages:
+class Language(Enum):
     """
     This class is a simple enumeration container for the different languages implemented
     """
-    English = 301
-    Spanish = 302
-    French = 303
+    English = auto()
+    Spanish = auto()
+    French = auto()
 
 
 # This variable is a global parameter to hold the language state for the running program
-CurrentLanguage = Languages.English
+CurrentLanguage = Language.English
 
 EnglishDictionary = {
     'ABOUT_DIALOG': 'This program was created by NREL for the United States Department of Energy.',
@@ -35,7 +34,8 @@ EnglishDictionary = {
         'All transitions completed successfully - Open run directory for transitioned file',
     'Could not open run directory': 'Could not open run directory',
     'Open Run Directory': 'Open Run Directory',
-    'Cannot find a matching transition tool for this idf version': 'Cannot find a matching transition tool for this idf version',
+    'Cannot find a matching transition tool for this idf version':
+        'Cannot find a matching transition tool for this idf version',
     'Open File for Transition': '',
     'IDF File doesn\'t exist at path given; cannot transition': '',
     'IDF File exists, ready to go': ''
@@ -68,8 +68,6 @@ SpanishDictionary = {
     'IDF File doesn\'t exist at path given; cannot transition':
         'IDF El archivo no existe en la ruta dada; no puede transición',
     'IDF File exists, ready to go': 'existe IDF del archivo, listo para ir'
-
-
 }
 
 FrenchDictionary = {
@@ -118,7 +116,10 @@ def report_missing_keys():
     This function simply reports to the terminal.
     """
     base_keys = EnglishDictionary.keys()
-    for dict_name, dictionary in {'Spanish': SpanishDictionary, 'French': FrenchDictionary}.iteritems():  # add here
+    known_dictionaries = {
+        'Spanish': SpanishDictionary, 'French': FrenchDictionary
+    }
+    for dict_name, dictionary in known_dictionaries.items():  # add here
         print("Processing missing keys from dictionary: " + dict_name)
         for key in base_keys:
             if key not in dictionary:
@@ -138,9 +139,9 @@ def translate(key):
 
     # start with English, but switch based on language
     dictionary = EnglishDictionary
-    if CurrentLanguage == Languages.Spanish:
+    if CurrentLanguage == Language.Spanish:
         dictionary = SpanishDictionary
-    elif CurrentLanguage == Languages.French:
+    elif CurrentLanguage == Language.French:
         dictionary = FrenchDictionary
 
     # if the key is there, return it, otherwise return a big flashy problematic statement

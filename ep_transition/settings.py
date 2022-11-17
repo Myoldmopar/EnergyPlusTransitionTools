@@ -2,7 +2,7 @@ import json
 import os
 from sys import platform
 
-from International import Languages
+from ep_transition.international import Language
 
 
 class Keys:
@@ -24,7 +24,7 @@ def load_settings(settings_file_name):
         else:
             settings[Keys.last_idf] = '/path/to.idf'
     if Keys.language not in settings:
-        settings[Keys.language] = Languages.English
+        settings[Keys.language] = Language.English
     return settings
 
 
