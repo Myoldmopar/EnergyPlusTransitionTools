@@ -188,7 +188,9 @@ class VersionUpdaterWindow(Tk):
 
         # top row: E+ folder selection
         lf = LabelFrame(self, text=_("EnergyPlus Installation"))
-        self.button_select_eplus_dir = Button(lf, text=_('Choose E+ Folder...'), command=self._on_press_choose_eplus_dir)
+        self.button_select_eplus_dir = Button(
+            lf, text=_('Choose E+ Folder...'), command=self._on_press_choose_eplus_dir
+        )
         self.button_select_eplus_dir.grid(row=0, rowspan=2, column=0, **self.pad)
         Label(lf, text=_("Selected Directory: ")).grid(row=0, column=1, sticky=E, **self.pad)
         self.label_eplus_dir = Label(lf, textvariable=self._tk_var_eplus_dir)
