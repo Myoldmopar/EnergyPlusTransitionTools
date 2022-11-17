@@ -1,13 +1,10 @@
-from enum import Enum, auto
-
-
-class Language(Enum):
+class Language:
     """
     This class is a simple enumeration container for the different languages implemented
     """
-    English = auto()
-    Spanish = auto()
-    French = auto()
+    English = 'en'
+    Spanish = 'sp'
+    French = 'fr'
 
 
 # This variable is a global parameter to hold the language state for the running program
@@ -20,13 +17,26 @@ EnglishDictionary = {
     'File Path': 'File Path',
     'You must restart the app to make the language change take effect.  Would you like to restart now?':
         'You must restart the app to make the language change take effect.  Would you like to restart now?',
-    'Old Version': 'Old Version',
+    'Old Version': 'Original IDF Version',
     'Keep Intermediate Versions of Files?': 'Keep Intermediate Versions of Files?',
     'Update File': 'Update File',
     'Close': 'Close',
+    'Exit': 'Exit',
+    'Menu': 'Menu',
     'Cancel Run': 'Cancel Run',
+    "EnergyPlus Installation": "EnergyPlus Installation",
+    'Choose E+ Folder...': 'Choose E+ Folder...',
+    "Selected Directory: ": "Selected Directory: ",
+    "Install Details: ": "Install Details: ",
+    'EnergyPlus Version': 'EnergyPlus Version',
     'Program Initialized': 'Program Initialized',
+    "IDF Selection": "IDF Selection",
+    "Invalid Version": "Invalid Version",
+    "Selected IDF: ": "Selected IDF: ",
+    "File Details: ": "File Details: ",
+    "Language Confirmation": "Language Confirmation",
     'Running Transition': 'Running Transition',
+    "Choose EnergyPlus Install Root": "Choose EnergyPlus Install Root",
     'Transition Cancelled': 'Transition Cancelled',
     'Completed Transition': 'Completed Transition',
     'Failed Transition': 'Failed Transition',
@@ -36,9 +46,12 @@ EnglishDictionary = {
     'Open Run Directory': 'Open Run Directory',
     'Cannot find a matching transition tool for this idf version':
         'Cannot find a matching transition tool for this idf version',
-    'Open File for Transition': '',
-    'IDF File doesn\'t exist at path given; cannot transition': '',
-    'IDF File exists, ready to go': ''
+    'Open File for Transition': 'Open File for Transition',
+    'IDF File doesn\'t exist at path given; cannot transition':
+        'IDF File doesn\'t exist or invalid E+ install; cannot transition',
+    'IDF File exists, ready to go': 'IDF File exists, ready to go',
+    "Attempting to cancel simulation ...": "Attempting to cancel simulation ...",
+    "Transition cancelled": "Transition cancelled",
 }
 
 SpanishDictionary = {
@@ -52,9 +65,22 @@ SpanishDictionary = {
     'Keep Intermediate Versions of Files?': 'Mantener versiones intermedias de Archivos?',
     'Update File': 'Actualizar archivo',
     'Close': 'Cerca',
+    'Exit': 'Salida',
+    'Menu': 'Menú',
     'Cancel Run': 'Cancelar Ejecutar',
+    "EnergyPlus Installation": "EnergyPlus instalación",
+    'Choose E+ Folder...': 'Elige E+ Carpeta...',
+    "Selected Directory: ": "Directorio seleccionado: ",
+    "Install Details: ": "Detalles de instalación: ",
+    'EnergyPlus Version': 'Versión del EnergyPlus',
     'Program Initialized': 'Programa Initialized',
+    "IDF Selection": "IDF Selección",
+    "Selected IDF: ": "Sélection de IDF: ",
+    "Invalid Version": "Versión inválida",
+    "File Details: ": "Detalles del archivo: ",
+    "Language Confirmation": "Confirmar idioma",
     'Running Transition': 'Transición corriendo',
+    "Choose EnergyPlus Install Root": "Elija raíz de instalación de EnergyPlus",
     'Transition Cancelled': 'transición Cancelado',
     'Completed Transition': 'Transición completado',
     'Failed Transition': 'La transición fallida',
@@ -67,7 +93,9 @@ SpanishDictionary = {
     'Open File for Transition': 'Abrir archivo para la Transición',
     'IDF File doesn\'t exist at path given; cannot transition':
         'IDF El archivo no existe en la ruta dada; no puede transición',
-    'IDF File exists, ready to go': 'existe IDF del archivo, listo para ir'
+    'IDF File exists, ready to go': 'existe IDF del archivo, listo para ir',
+    "Attempting to cancel simulation ...": "Intentando cancelar la simulación ...",
+    "Transition cancelled": "Transición cancelada",
 }
 
 FrenchDictionary = {
@@ -81,9 +109,22 @@ FrenchDictionary = {
     'Keep Intermediate Versions of Files?': 'Gardez versions intermediaires de fichiers?',
     'Update File': 'Mise a jour de fichiers',
     'Close': 'Fermer',
+    'Exit': 'Sortir',
+    'Menu': 'Menu',
     'Cancel Run': 'Annuler Run',
+    "EnergyPlus Installation": "EnergyPlus Installation",
+    'Choose E+ Folder...': 'Choisir E+ Dossier...',
+    "Selected Directory: ": "Répertoire sélectionné: ",
+    "Install Details: ": "Détails de l'installation: ",
+    'EnergyPlus Version': 'Version du EnergyPlus',
     'Program Initialized': 'Programme initialisé',
+    "IDF Selection": "IDF Sélection",
+    "Invalid Version": "Version invalide",
+    "Selected IDF: ": "Sélection de IDF: ",
+    "File Details: ": "Détails du fichier: ",
+    "Language Confirmation": "Confirmer la langue",
     'Running Transition': 'Transition en cours',
+    "Choose EnergyPlus Install Root": "Choisissez la racine d'installation d'EnergyPlus",
     'Transition Cancelled': 'transition Annulé',
     'Completed Transition': 'transition Terminé',
     'Failed Transition': 'transition Échec',
@@ -96,7 +137,9 @@ FrenchDictionary = {
     'Open File for Transition': 'Ouvrir un fichier pour la transition',
     'IDF File doesn\'t exist at path given; cannot transition':
         'IDF fichier n\'existe pas au chemin donné; ne peut pas passer',
-    'IDF File exists, ready to go': 'IDF fichier existe, prêt à aller'
+    'IDF File exists, ready to go': 'IDF fichier existe, prêt à aller',
+    "Attempting to cancel simulation ...": "Tentative d'annulation de la simulation ...",
+    "Transition cancelled": "Transition annulée",
 }
 
 
@@ -150,3 +193,7 @@ def translate(key):
     else:
         print("Could not find this key in the dictionary: \"%s\"" % key)
         return "TRANSLATION MISSING"
+
+
+if __name__ == "__main__":
+    report_missing_keys()

@@ -1,2 +1,2 @@
-NAME = 'ep_transition'
-VERSION = '2.0.1'
+NAME = 'ep_transition_tools'
+VERSION = '2.0.2'

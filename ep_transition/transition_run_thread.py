@@ -24,7 +24,8 @@ class TransitionRunThread(threading.Thread):
     """
 
     def __init__(self, transitions_to_run: List[TransitionBinary], working_directory: Path, original_file_path: Path,
-                 keep_old: bool, msg_callback: Callable, done_callback: Callable):
+                 keep_old: bool, ready_callback: Callable, increment_callback: Callable,
+                 msg_callback: Callable, done_callback: Callable):
         self.p = None
         self.std_out = None
         self.std_err = None
@@ -32,6 +33,8 @@ class TransitionRunThread(threading.Thread):
         self.run_dir = working_directory
         self.input_file = original_file_path
         self.keep_old = keep_old
+        self.ready_callback = ready_callback
+        self.increment_callback = increment_callback
         self.msg_callback = msg_callback
         self.done_callback = done_callback
         self.cancelled = False
@@ -63,6 +66,7 @@ class TransitionRunThread(threading.Thread):
         shutil.copy(self.input_file, self.run_dir)
         base_file_name = self.input_file.name
         failed = False
+        self.ready_callback(len(self.transitions))
         for tr in self.transitions:
             if self.keep_old:
                 backup_success = self.backup_file_before_transition(tr)
@@ -93,6 +97,7 @@ class TransitionRunThread(threading.Thread):
                         _("Failed Transition") + " " + str(tr.source_version) + " -> " + str(tr.target_version))
                     failed = True
                     break
+            self.increment_callback()
         if self.cancelled:
             self.done_callback(_("Transition cancelled"))
         elif failed:
@@ -100,25 +105,7 @@ class TransitionRunThread(threading.Thread):
         else:
             self.done_callback(_("All transitions completed successfully - Open run directory for transitioned file"))
 
-    @staticmethod
-    def get_ep_version(run_script: Path):
-        """
-        This function returns a human friendly version identifier for a given EnergyPlus binary.
-        This function relies on the ``-v`` flag for the EnergyPlus binary
-
-        :param run_script: Absolute path to an EnergyPlus main binary
-        :rtype: Returns a human friendly EnergyPlus version identifier; the exact format is not defined
-        """
-        p = subprocess.Popen([run_script, '-v'], shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        std_out, std_err = p.communicate()
-        return std_out.strip()
-
     def stop(self):
-        """
-        This function allows attempting to stop the thread if it is running.
-        This function polls the existing subprocess to see if it is running and attempts to kill the process
-        """
-        if self.p.poll() is None:
-            self.msg_callback(_("Attempting to cancel simulation ..."))
-            self.cancelled = True
-            self.p.kill()
+        """Sets the cancelled flag to attempt to kill the transition at the next step"""
+        self.msg_callback(_("Attempting to cancel simulation ..."))
+        self.cancelled = True

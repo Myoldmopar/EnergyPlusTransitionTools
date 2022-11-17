@@ -1,15 +1,17 @@
 # IDFVersionUpdater
 
-A super simple wxPython-based IDFVersionUpdater tool
+A super simple Python Tk-based IDFVersionUpdater tool
 
 # Documentation [![Documentation Status](http://readthedocs.org/projects/idfversionupdater-20/badge/?version=latest)](http://idfversionupdater-20.readthedocs.io/en/latest/?badge=latest)
 
 Project is documented on ReadTheDocs.
 
-# Testing [![Testing Status](https://travis-ci.org/Myoldmopar/IDFVersionUpdater2.svg?branch=master)](http://travis-ci.org/Myoldmopar/IDFVersionUpdater2)
+# Testing
 
-Project is continually tested using Travis CI.
+Project is continually tested using Github Actions
 
-# Releases [![Release](https://img.shields.io/badge/release-latest-brightgreen.svg)](https://github.com/Myoldmopar/IDFVersionUpdater2/releases/latest)
+# Releases
 
-Travis is looking hopeful for making these releases...
+Project is built into a wheel and pushed to pypi for each tag.
+To install, it will be `pip install ep-transition-tools`.
+This will (eventually) install 2 binaries into the python environment: `ep_transition_gui` and `ep_transition_cli`. 
