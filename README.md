@@ -8,10 +8,15 @@ Project is documented on ReadTheDocs.
 
 # Testing
 
-Project is continually tested using Github Actions
+[![Flake8](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/flake8.yml/badge.svg)](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/flake8.yml)
+[![Run Tests](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/unit_tests.yml)
+
+Project is continually tested using GitHub Actions
 
 # Releases
 
-Project is built into a wheel and pushed to pypi for each tag.
+[![Release_to_PyPi](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/pypi.yml/badge.svg)](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/pypi.yml)
+
+Project is built into a wheel and pushed to pypi for each tag: https://pypi.org/project/ep-transition-tools/.
 To install, it will be `pip install ep-transition-tools`.
 This will (eventually) install 2 binaries into the python environment: `ep_transition_gui` and `ep_transition_cli`. 
