@@ -18,7 +18,6 @@ from ep_transition.international import translate as _, Language, set_language
 
 # TODO: Work on CLI
 # TODO: Unit test
-# TODO: Package
 
 class Configuration:
     class Keys:
