@@ -1,7 +1,7 @@
 TransitionBinary Class
 ======================
 
-.. automodule:: TransitionBinary
+.. automodule:: ep_transition.transition_binary
     :members:
     :undoc-members:
     :show-inheritance:
