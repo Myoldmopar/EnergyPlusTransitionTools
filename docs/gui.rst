@@ -1,7 +1,7 @@
 IDFVersionUpdater Class
 =======================
 
-.. automodule:: IDFVersionUpdater
+.. automodule:: ep_transition.gui
     :members:
     :undoc-members:
     :show-inheritance:

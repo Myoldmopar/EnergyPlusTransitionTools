@@ -11,7 +11,7 @@ from tkinter import (
 )
 from tkinter.ttk import Progressbar
 from ep_transition import NAME, VERSION
-from ep_transition.energyPlus_path import EnergyPlusPath
+from ep_transition.energyplus_path import EnergyPlusPath
 from ep_transition.transition_run_thread import TransitionRunThread
 from ep_transition.international import translate as _, Language, set_language
 
