@@ -11,7 +11,7 @@ setup(
     name=NAME,
     version=VERSION,
     description='A library and tkinter-based tool for transitioning EnergyPlus input files',
-    url='https://github.com/myoldmopar/idfversionupdater2',
+    url='https://github.com/myoldmopar/EnergyPlusTransitionTools',
     license='',
     packages=['ep_transition'],
     package_data={},

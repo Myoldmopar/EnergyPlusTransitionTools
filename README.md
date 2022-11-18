@@ -1,22 +1,24 @@
-# IDFVersionUpdater
+# EnergyPlusTransitionTools
 
-A super simple Python Tk-based IDFVersionUpdater tool
+A library of transition functionality.
+Currently it is a super simple Python Tk-based IDFVersionUpdater tool.
+Soon it will hopefully contain the actual transition mechanics.
 
-# Documentation [![Documentation Status](http://readthedocs.org/projects/idfversionupdater-20/badge/?version=latest)](http://idfversionupdater-20.readthedocs.io/en/latest/?badge=latest)
+# Documentation [![Documentation Status](http://readthedocs.org/projects/EnergyPlusTransitionTools/badge/?version=latest)](http://EnergyPlusTransitionTools.readthedocs.io/en/latest/?badge=latest)
 
 Project is documented on ReadTheDocs.
 
 # Testing
 
-[![Flake8](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/flake8.yml/badge.svg)](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/flake8.yml)
-[![Run Tests](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/unit_tests.yml)
+[![Flake8](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/flake8.yml/badge.svg)](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/flake8.yml)
+[![Run Tests](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/unit_tests.yml)
 
 Project is continually tested using GitHub Actions
 
 # Releases
 
-[![Release_to_PyPi](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/pypi.yml/badge.svg)](https://github.com/Myoldmopar/IDFVersionUpdater2/actions/workflows/pypi.yml)
+[![Release_to_PyPi](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/pypi.yml/badge.svg)](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/pypi.yml)
 
 Project is built into a wheel and pushed to pypi for each tag: https://pypi.org/project/ep-transition-tools/.
-To install, it will be `pip install ep-transition-tools`.
+To install, it will be `pip install energyplus-transition-tools`.
 This will (eventually) install 2 binaries into the python environment: `ep_transition_gui` and `ep_transition_cli`. 
