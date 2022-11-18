@@ -16,9 +16,6 @@ from ep_transition.transition_run_thread import TransitionRunThread
 from ep_transition.international import translate as _, Language, set_language
 
 
-# TODO: Work on CLI
-# TODO: Unit test
-
 class Configuration:
     class Keys:
         last_idf_folder = 'last_idf_folder'

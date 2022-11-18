@@ -4,7 +4,7 @@ A library of transition functionality.
 Currently it is a super simple Python Tk-based IDFVersionUpdater tool.
 Soon it will hopefully contain the actual transition mechanics.
 
-# Documentation [![Documentation Status](http://readthedocs.org/projects/EnergyPlusTransitionTools/badge/?version=latest)](http://EnergyPlusTransitionTools.readthedocs.io/en/latest/?badge=latest)
+# Documentation [![Documentation Status](https://readthedocs.org/projects/energyplustransitiontools/badge/?version=latest)](https://energyplustransitiontools.readthedocs.io/en/latest/?badge=latest)
 
 Project is documented on ReadTheDocs.
 
