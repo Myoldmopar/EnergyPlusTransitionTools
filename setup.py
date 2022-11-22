@@ -20,5 +20,8 @@ setup(
     long_description_content_type='text/markdown',
     author="Edwin Lee via NREL via United States Department of Energy",
     install_requires=[],
+    extras_require={
+        "test": ["black", "isort", "flake8", "mypy"],
+    },
     entry_points={'console_scripts': ['ep_transition_gui=ep_transition.runner:main_gui']},
 )
