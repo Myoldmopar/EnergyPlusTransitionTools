@@ -55,7 +55,7 @@ class EnergyPlusPath(object):
         eplus_install_dirs = list(install_base.glob("EnergyPlus*"))
         if len(eplus_install_dirs) == 0:
             return None
-        highest_version = -1
+        highest_version = -1.0
         highest_version_instance = None
         for found_install in eplus_install_dirs:
             version_tokens = found_install.name.split("-")
