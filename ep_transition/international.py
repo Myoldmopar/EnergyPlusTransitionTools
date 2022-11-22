@@ -16,7 +16,9 @@ EnglishDictionary = {
     "Choose File to Update...": "Choose File to Update...",
     "About...": "About...",
     "File Path": "File Path",
-    "You must restart the app to make the language change take effect.  Would you like to restart now?": "You must restart the app to make the language change take effect.  Would you like to restart now?",
+    "You must restart the app to make the language change take effect.  Would you like to restart now?": (
+        "You must restart the app to make the language change take effect.  Would you like to restart now?"
+    ),
     "Old Version": "Original IDF Version",
     "Keep Intermediate Versions of Files?": "Keep Intermediate Versions of Files?",
     "Update File": "Update File",
@@ -40,12 +42,18 @@ EnglishDictionary = {
     "Transition Cancelled": "Transition Cancelled",
     "Completed Transition": "Completed Transition",
     "Failed Transition": "Failed Transition",
-    "All transitions completed successfully - Open run directory for transitioned file": "All transitions completed successfully - Open run directory for transitioned file",
+    "All transitions completed successfully - Open run directory for transitioned file": (
+        "All transitions completed successfully - Open run directory for transitioned file"
+    ),
     "Could not open run directory": "Could not open run directory",
     "Open Run Directory": "Open Run Directory",
-    "Cannot find a matching transition tool for this idf version": "Cannot find a matching transition tool for this idf version",
+    "Cannot find a matching transition tool for this idf version": (
+        "Cannot find a matching transition tool for this idf version"
+    ),
     "Open File for Transition": "Open File for Transition",
-    "IDF File doesn't exist at path given; cannot transition": "IDF File doesn't exist or invalid E+ install; cannot transition",
+    "IDF File doesn't exist at path given; cannot transition": (
+        "IDF File doesn't exist or invalid E+ install; cannot transition"
+    ),
     "IDF File exists, ready to go": "IDF File exists, ready to go",
     "Attempting to cancel simulation ...": "Attempting to cancel simulation ...",
     "Transition cancelled": "Transition cancelled",
@@ -56,7 +64,9 @@ SpanishDictionary = {
     "Choose File to Update...": "Elegir archivo para actualizar ...",
     "About...": "Acerca de...",
     "File Path": "Ruta de archivo",
-    "You must restart the app to make the language change take effect.  Would you like to restart now?": "Debe reiniciar la aplicacion para que el cambio de idioma tenga efecto. Le gustaria reiniciar ahora?",
+    "You must restart the app to make the language change take effect.  Would you like to restart now?": (
+        "Debe reiniciar la aplicacion para que el cambio de idioma tenga efecto. Le gustaria reiniciar ahora?"
+    ),
     "Old Version": "Version antigua",
     "Keep Intermediate Versions of Files?": "Mantener versiones intermedias de Archivos?",
     "Update File": "Actualizar archivo",
@@ -80,23 +90,33 @@ SpanishDictionary = {
     "Transition Cancelled": "transición Cancelado",
     "Completed Transition": "Transición completado",
     "Failed Transition": "La transición fallida",
-    "All transitions completed successfully - Open run directory for transitioned file": "Todas las transiciones completada con éxito - Abrir directorio de ejecución para el archivo de la transición",
+    "All transitions completed successfully - Open run directory for transitioned file": (
+        "Todas las transiciones completada con éxito - Abrir directorio de ejecución para el archivo de la transición"
+    ),
     "Could not open run directory": "No se pudo abrir directorio de ejecución",
     "Open Run Directory": "Directorio de ejecución abierta",
-    "Cannot find a matching transition tool for this idf version": "No se puede encontrar una herramienta de transición a juego para esta versión de la FID",
+    "Cannot find a matching transition tool for this idf version": (
+        "No se puede encontrar una herramienta de transición a juego para esta versión de la FID"
+    ),
     "Open File for Transition": "Abrir archivo para la Transición",
-    "IDF File doesn't exist at path given; cannot transition": "IDF El archivo no existe en la ruta dada; no puede transición",
+    "IDF File doesn't exist at path given; cannot transition": (
+        "IDF El archivo no existe en la ruta dada; no puede transición"
+    ),
     "IDF File exists, ready to go": "existe IDF del archivo, listo para ir",
     "Attempting to cancel simulation ...": "Intentando cancelar la simulación ...",
     "Transition cancelled": "Transición cancelada",
 }
 
 FrenchDictionary = {
-    "ABOUT_DIALOG": "Ce logiciel a été créé par NREL pour le Départment de l'Energie des Etats Unis d'Amérique (US DOE).",
+    "ABOUT_DIALOG": (
+        "Ce logiciel a été créé par NREL pour le Départment de l'Energie des Etats Unis d'Amérique (US DOE)."
+    ),
     "Choose File to Update...": "Choisissez le Fichier à mettre a jour ...",
     "About...": "A propos...",
     "File Path": "Chemin du fichier",
-    "You must restart the app to make the language change take effect.  Would you like to restart now?": "Vous devez relancer le logiciel pour effectuer le changement de langue. Voulez-vous relancer maintenant ?",
+    "You must restart the app to make the language change take effect.  Would you like to restart now?": (
+        "Vous devez relancer le logiciel pour effectuer le changement de langue. Voulez-vous relancer maintenant ?"
+    ),
     "Old Version": "Ancienne version",
     "Keep Intermediate Versions of Files?": "Garder les versions intermédiaires des fichiers ?",
     "Update File": "Mettre à jour le fichier",
@@ -120,12 +140,18 @@ FrenchDictionary = {
     "Transition Cancelled": "Transition Annulée",
     "Completed Transition": "Transition Terminée",
     "Failed Transition": "Échec de la Transition",
-    "All transitions completed successfully - Open run directory for transitioned file": "Toutes les transitions effectuées avec succès - Ouvrir le répertoire d'exécution pour le fichier mis à jour",
+    "All transitions completed successfully - Open run directory for transitioned file": (
+        "Toutes les transitions effectuées avec succès - Ouvrir le répertoire d'exécution pour le fichier mis à jour"
+    ),
     "Could not open run directory": "Impossible d'ouvrir le répertoire d'exécution",
     "Open Run Directory": "Ouvrir le répertoire d'exécution",
-    "Cannot find a matching transition tool for this idf version": "Impossible de trouver un utilitaire de Transition correspondant à cette version d'IDF",
+    "Cannot find a matching transition tool for this idf version": (
+        "Impossible de trouver un utilitaire de Transition correspondant à cette version d'IDF"
+    ),
     "Open File for Transition": "Ouvrir un fichier pour la transition",
-    "IDF File doesn't exist at path given; cannot transition": "Le fichier IDF n'existe pas au chemin donné ; Transition impossible",
+    "IDF File doesn't exist at path given; cannot transition": (
+        "Le fichier IDF n'existe pas au chemin donné ; Transition impossible"
+    ),
     "IDF File exists, ready to go": "Fichier IDF existe, prêt.",
     "Attempting to cancel simulation ...": "Tentative d'annulation de la simulation ...",
     "Transition cancelled": "Transition annulée",
