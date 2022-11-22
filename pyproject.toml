@@ -1,3 +1,38 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "energyplus_transition_tools"
+version = "2.0.3"
+description = "A library and tkinter-based tool for transitioning EnergyPlus input files"
+authors = [{name ="Edwin Lee", email = "contact@nrel.org"}, {name = "Julien Marrec", email = "contact@effibem.com"}]
+readme = "README.md"
+requires-python = ">=3.7"
+keywords = ["energyplus", "building energy modeling"]
+license = {text = "BSD 3-Clause License"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering",
+    'Natural Language :: English',
+    'Natural Language :: French',
+    'Natural Language :: Spanish',
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+]
+
+[project.scripts]
+ep_transition_gui = "ep_transition.runner:main_gui"
+
+[project.optional-dependencies]
+test = ["tox", "black", "flake8", "mypy", "isort"]
+
 [tool.black]
 line-length = 120
 skip-string-normalization = true

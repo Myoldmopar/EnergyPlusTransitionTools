@@ -12,6 +12,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import importlib.metadata
 import sys
 from pathlib import Path
 
@@ -21,7 +22,9 @@ from pathlib import Path
 package_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(package_root))
 
-from ep_transition import NAME, VERSION
+NAME = "energyplus_transition_tools"
+VERSION = importlib.metadata.version(NAME)
+
 
 # -- General configuration ------------------------------------------------
 

@@ -1,3 +1,4 @@
+import importlib.metadata
 import subprocess
 from json import dumps, loads
 from pathlib import Path
@@ -28,11 +29,13 @@ from tkinter import (
 from tkinter.ttk import Progressbar
 from typing import Optional
 
-from ep_transition import NAME, VERSION
 from ep_transition.energyplus_path import EnergyPlusPath
 from ep_transition.international import Language, set_language
 from ep_transition.international import translate as _
 from ep_transition.transition_run_thread import TransitionRunThread
+
+NAME = "energyplus_transition_tools"
+VERSION = importlib.metadata.version(NAME)
 
 
 class Configuration:
