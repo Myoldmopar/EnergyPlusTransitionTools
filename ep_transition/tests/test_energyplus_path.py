@@ -1,6 +1,5 @@
 import unittest
 
-
 # EnergyPlusPath is entirely based on an existing installation, so it doesn't make it easy to unit test on a standalone
 # machine without Installing E+ itself
 

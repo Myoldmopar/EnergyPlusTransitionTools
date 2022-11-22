@@ -1,7 +1,8 @@
 from pathlib import Path
-from subprocess import check_output, CalledProcessError
+from subprocess import CalledProcessError, check_output
 from sys import platform
 from typing import List, Optional
+
 from ep_transition.transition_binary import TransitionBinary
 
 
@@ -25,16 +26,16 @@ class EnergyPlusPath(object):
         self.version: str = "Unknown.Ep.Version"
         # then overwrite if possible
         if self.install_root.exists():
-            self.transition_directory = self.install_root / 'PreProcess' / 'IDFVersionUpdater'
-            binary_paths = list(self.transition_directory.glob('Transition-V*'))
+            self.transition_directory = self.install_root / "PreProcess" / "IDFVersionUpdater"
+            binary_paths = list(self.transition_directory.glob("Transition-V*"))
             self.transitions_available = [TransitionBinary(x) for x in binary_paths]
             self.transitions_available.sort(key=lambda tb: tb.source_version)
             try:
-                raw_version_output = check_output([str(self.install_root / 'energyplus'), '-v'], shell=False)
-                string_version_output = raw_version_output.decode('utf-8')
-                version_token = string_version_output.split(',')[1].strip()
-                version_description = version_token.split(' ')[1]
-                just_version_number = version_description.split('-')[0]
+                raw_version_output = check_output([str(self.install_root / "energyplus"), "-v"], shell=False)
+                string_version_output = raw_version_output.decode("utf-8")
+                version_token = string_version_output.split(",")[1].strip()
+                version_description = version_token.split(" ")[1]
+                just_version_number = version_description.split("-")[0]
                 self.version = just_version_number
             except CalledProcessError:
                 pass
@@ -46,18 +47,18 @@ class EnergyPlusPath(object):
     @staticmethod
     def try_to_auto_find() -> Optional[Path]:
         if platform.startswith("linux"):
-            install_base = Path('/eplus/installs/')  # ('/usr/local/EnergyPlus*')
+            install_base = Path("/eplus/installs/")  # ('/usr/local/EnergyPlus*')
         elif platform == "darwin":
-            install_base = Path('/Applications/EnergyPlus*')
+            install_base = Path("/Applications/EnergyPlus*")
         else:  # assuming windows
-            install_base = Path('C:/EnergyPlusV*')
-        eplus_install_dirs = list(install_base.glob('EnergyPlus*'))
+            install_base = Path("C:/EnergyPlusV*")
+        eplus_install_dirs = list(install_base.glob("EnergyPlus*"))
         if len(eplus_install_dirs) == 0:
             return None
         highest_version = -1
         highest_version_instance = None
         for found_install in eplus_install_dirs:
-            version_tokens = found_install.name.split('-')
+            version_tokens = found_install.name.split("-")
             major_dot_minor = f"{version_tokens[-3]}.{version_tokens[-2]}"
             this_version = float(major_dot_minor)
             if this_version > highest_version:

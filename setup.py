@@ -1,8 +1,8 @@
 from pathlib import Path
+
 from setuptools import setup
 
 from ep_transition import NAME, VERSION
-
 
 readme_file = Path(__file__).parent.resolve() / 'README.md'
 readme_contents = readme_file.read_text()
@@ -20,7 +20,5 @@ setup(
     long_description_content_type='text/markdown',
     author="Edwin Lee via NREL via United States Department of Energy",
     install_requires=[],
-    entry_points={
-        'console_scripts': ['ep_transition_gui=ep_transition.runner:main_gui']
-    }
+    entry_points={'console_scripts': ['ep_transition_gui=ep_transition.runner:main_gui']},
 )
