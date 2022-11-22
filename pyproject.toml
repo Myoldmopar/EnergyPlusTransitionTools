@@ -31,7 +31,7 @@ classifiers = [
 ep_transition_gui = "ep_transition.runner:main_gui"
 
 [project.optional-dependencies]
-test = ["tox", "black", "flake8", "mypy", "isort"]
+test = ["tox", "pytest", "pytest-cov", "black", "flake8", "mypy", "isort"]
 
 [tool.black]
 line-length = 120
