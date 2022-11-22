@@ -99,7 +99,8 @@ SpanishDictionary = {
 }
 
 FrenchDictionary = {
-    'ABOUT_DIALOG': "Ce logiciel a été créé par NREL pour le Départment de l'Energie des Etats Unis d'Amérique (US DOE).",
+    'ABOUT_DIALOG':
+        "Ce logiciel a été créé par NREL pour le Départment de l'Energie des Etats Unis d'Amérique (US DOE).",
     'Choose File to Update...': 'Choisissez le Fichier à mettre a jour ...',
     'About...': 'A propos...',
     'File Path': 'Chemin du fichier',
