@@ -58,11 +58,9 @@ class EnergyPlusPath(object):
         highest_version_instance = None
         for found_install in eplus_install_dirs:
             just_version_suffix = found_install.name[10:]
-            print(f"{just_version_suffix=}")
             if just_version_suffix.startswith('V') or just_version_suffix.startswith('-'):
                 just_version_suffix = just_version_suffix[1:]
             version_tokens = just_version_suffix.split('-')
-            print(f"{version_tokens=}")
             if len(version_tokens) < 2:
                 print(f"Skipping install at: {found_install}")
                 continue
