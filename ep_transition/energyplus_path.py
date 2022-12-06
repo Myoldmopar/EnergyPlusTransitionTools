@@ -34,31 +34,39 @@ class EnergyPlusPath(object):
                 string_version_output = raw_version_output.decode('utf-8')
                 version_token = string_version_output.split(',')[1].strip()
                 version_description = version_token.split(' ')[1]
-                just_version_number = version_description.split('-')[0]
-                self.version = just_version_number
+                self.version = version_description.split('-')[0]
+                self.valid_install = True
             except CalledProcessError:
                 pass
             except FileNotFoundError:
                 pass
-            else:
-                self.valid_install = True
 
     @staticmethod
     def try_to_auto_find() -> Optional[Path]:
         if platform.startswith("linux"):
-            install_base = Path('/eplus/installs/')  # ('/usr/local/EnergyPlus*')
+            install_bases = (Path('/usr/local'), Path('/eplus/installs/'))
         elif platform == "darwin":
-            install_base = Path('/Applications/EnergyPlus*')
+            install_bases = (Path('/Applications'),)
         else:  # assuming windows
-            install_base = Path('C:/EnergyPlusV*')
-        eplus_install_dirs = list(install_base.glob('EnergyPlus*'))
+            install_bases = (Path(r'C:/'),)
+        eplus_install_dirs = []
+        for base in install_bases:
+            eplus_install_dirs.extend(list(base.glob('EnergyPlus*')))
         if len(eplus_install_dirs) == 0:
             return None
         highest_version = -1
         highest_version_instance = None
         for found_install in eplus_install_dirs:
-            version_tokens = found_install.name.split('-')
-            major_dot_minor = f"{version_tokens[-3]}.{version_tokens[-2]}"
+            just_version_suffix = found_install.name[10:]
+            print(f"{just_version_suffix=}")
+            if just_version_suffix.startswith('V') or just_version_suffix.startswith('-'):
+                just_version_suffix = just_version_suffix[1:]
+            version_tokens = just_version_suffix.split('-')
+            print(f"{version_tokens=}")
+            if len(version_tokens) < 2:
+                print(f"Skipping install at: {found_install}")
+                continue
+            major_dot_minor = f"{version_tokens[0]}.{version_tokens[1]}"
             this_version = float(major_dot_minor)
             if this_version > highest_version:
                 highest_version = this_version
@@ -72,3 +80,4 @@ class EnergyPlusPath(object):
 if __name__ == "__main__":
     default = EnergyPlusPath.try_to_auto_find()
     instance = EnergyPlusPath(str(EnergyPlusPath.try_to_auto_find()))
+    pass

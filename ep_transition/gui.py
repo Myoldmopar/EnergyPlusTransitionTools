@@ -26,11 +26,13 @@ class Configuration:
 
     def __init__(self):
         self.settings_file = Path.home() / ".idfversionupdater.json"
-        try:
-            self.settings = loads(self.settings_file.read_text())
-        except Exception as e:
-            print(f"Could not load settings file at {str(self.settings_file)}, using blank settings, err = {str(e)}")
-            self.settings = {}
+        self.settings = {}
+        if self.settings_file.exists():
+            try:
+                file_contents = self.settings_file.read_text()
+                self.settings = loads(file_contents)
+            except Exception as e:
+                print(f"Could not load settings file at {str(self.settings_file)}, using blank settings, err = {str(e)}")
         # initialize the last selected idf folder
         if Configuration.Keys.last_idf_folder not in self.settings:
             self.settings[Configuration.Keys.last_idf_folder] = str(Path.home())
@@ -66,7 +68,7 @@ class Configuration:
 
 
 class VersionUpdaterWindow(Tk):
-    """ The main window, or wx.Frame, for the IDFVersionUpdater program.
+    """ The main window, or Tk(), for the IDFVersionUpdater program.
     This initializer function creates instance variables, sets up threading, and builds the GUI"""
 
     # region class construction and basic event/closing functions
@@ -77,8 +79,7 @@ class VersionUpdaterWindow(Tk):
         self._gui_queue = Queue()
         self._check_queue()
 
-        # load the settings here very early; the tilde is cross-platform thanks to Python
-
+        # load the settings here very early
         self.conf = Configuration()
 
         # initialize some class-level "constants"
@@ -114,7 +115,8 @@ class VersionUpdaterWindow(Tk):
             self.conf.save_settings()
         except Exception:
             pass
-        self.destroy()
+        finally:
+            self.destroy()
 
     def _check_queue(self):
         """Checks the GUI queue for actions and sets a timer to check again each time"""
@@ -246,6 +248,8 @@ class VersionUpdaterWindow(Tk):
             self.button_cancel['state'] = ACTIVE
         else:
             self.button_cancel['state'] = DISABLED
+            self.button_select_eplus_dir['state'] = ACTIVE
+            self.button_select_idf['state'] = ACTIVE
             idf = self._tk_var_idf_path.get()
             idf_path = Path(idf)
             if self.eplus_install.valid_install and idf_path.exists():
