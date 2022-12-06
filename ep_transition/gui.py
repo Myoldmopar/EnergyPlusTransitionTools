@@ -32,7 +32,9 @@ class Configuration:
                 file_contents = self.settings_file.read_text()
                 self.settings = loads(file_contents)
             except Exception as e:
-                print(f"Could not load settings file at {str(self.settings_file)}, using blank settings, err = {str(e)}")
+                print(
+                    f"Could not load settings file at {str(self.settings_file)}, using blank settings, err = {str(e)}"
+                )
         # initialize the last selected idf folder
         if Configuration.Keys.last_idf_folder not in self.settings:
             self.settings[Configuration.Keys.last_idf_folder] = str(Path.home())
