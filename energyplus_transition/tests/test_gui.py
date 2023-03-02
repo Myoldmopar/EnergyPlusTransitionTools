@@ -2,7 +2,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from ep_transition.gui import VersionUpdaterWindow
+from energyplus_transition.gui import VersionUpdaterWindow
 
 
 class TestGetIDFVersion(unittest.TestCase):

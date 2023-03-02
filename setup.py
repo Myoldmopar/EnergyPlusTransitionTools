@@ -1,7 +1,7 @@
 from pathlib import Path
 from setuptools import setup
 
-from ep_transition import NAME, VERSION
+from energyplus_transition import NAME, VERSION
 
 
 readme_file = Path(__file__).parent.resolve() / 'README.md'
@@ -13,7 +13,7 @@ setup(
     description='A library and tkinter-based tool for transitioning EnergyPlus input files',
     url='https://github.com/myoldmopar/EnergyPlusTransitionTools',
     license='',
-    packages=['ep_transition'],
+    packages=['energyplus_transition'],
     package_data={},
     include_package_data=True,
     long_description=readme_contents,
@@ -21,6 +21,6 @@ setup(
     author="Edwin Lee via NREL via United States Department of Energy",
     install_requires=[],
     entry_points={
-        'console_scripts': ['ep_transition_gui=ep_transition.runner:main_gui']
+        'console_scripts': ['energyplus_transition_gui=energyplus_transition.runner:main_gui']
     }
 )

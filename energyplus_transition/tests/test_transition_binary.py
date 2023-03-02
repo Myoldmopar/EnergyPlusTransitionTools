@@ -1,7 +1,7 @@
 from pathlib import Path
 import unittest
 
-from ep_transition.transition_binary import TransitionBinary
+from energyplus_transition.transition_binary import TransitionBinary
 
 
 class TestTransitionBinary(unittest.TestCase):

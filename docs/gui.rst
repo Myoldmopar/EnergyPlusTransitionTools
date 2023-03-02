@@ -1,7 +1,7 @@
 IDFVersionUpdater Class
 =======================
 
-.. automodule:: ep_transition.gui
+.. automodule:: energyplus_transition.gui
     :members:
     :undoc-members:
     :show-inheritance:

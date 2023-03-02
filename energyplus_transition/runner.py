@@ -3,7 +3,7 @@ def main_cli():
 
 
 def main_gui():
-    from ep_transition.gui import VersionUpdaterWindow
+    from energyplus_transition.gui import VersionUpdaterWindow
 
     # we will keep the form in a loop to handle requested restarts (language change, etc.)
     running = True

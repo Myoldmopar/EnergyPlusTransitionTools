@@ -21,4 +21,4 @@ Project is continually tested using GitHub Actions
 
 Project is built into a wheel and pushed to pypi for each tag: https://pypi.org/project/ep-transition-tools/.
 To install, it will be `pip install energyplus-transition-tools`.
-This will (eventually) install 2 binaries into the python environment: `ep_transition_gui` and `ep_transition_cli`. 
+This will (eventually) install 2 binaries into the python environment: `energyplus_transition_gui` and `energyplus_transition_cli`. 

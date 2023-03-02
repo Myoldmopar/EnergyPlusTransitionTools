@@ -21,7 +21,7 @@ from pathlib import Path
 package_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(package_root))
 
-from ep_transition import NAME, VERSION
+from energyplus_transition import NAME, VERSION
 
 # -- General configuration ------------------------------------------------
 
