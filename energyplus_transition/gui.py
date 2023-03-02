@@ -10,10 +10,10 @@ from tkinter import (
     ACTIVE, DISABLED, filedialog, NSEW, ALL, W, E, IntVar
 )
 from tkinter.ttk import Progressbar
-from ep_transition import NAME, VERSION
-from ep_transition.energyplus_path import EnergyPlusPath
-from ep_transition.transition_run_thread import TransitionRunThread
-from ep_transition.international import translate as _, Language, set_language
+from energyplus_transition import NAME, VERSION
+from energyplus_transition.energyplus_path import EnergyPlusPath
+from energyplus_transition.transition_run_thread import TransitionRunThread
+from energyplus_transition.international import translate as _, Language, set_language
 
 
 class Configuration:

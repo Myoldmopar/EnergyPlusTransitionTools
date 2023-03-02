@@ -1,7 +1,7 @@
 International Class
 ===================
 
-.. automodule:: ep_transition.international
+.. automodule:: energyplus_transition.international
     :members:
     :undoc-members:
     :show-inheritance:

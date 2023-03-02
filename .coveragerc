@@ -1,7 +1,7 @@
 [run]
-source = ep_transition
+source = energyplus_transition
 
 [report]
 omit =
-    */ep_transition/gui.py
-    */ep_transition/runner.py
+    */energyplus_transition/gui.py
+    */energyplus_transition/runner.py

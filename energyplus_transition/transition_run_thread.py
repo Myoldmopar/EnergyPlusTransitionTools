@@ -4,8 +4,8 @@ import subprocess
 import threading
 from typing import Callable, List
 
-from ep_transition.international import translate as _
-from ep_transition.transition_binary import TransitionBinary
+from energyplus_transition.international import translate as _
+from energyplus_transition.transition_binary import TransitionBinary
 
 
 class TransitionRunThread(threading.Thread):

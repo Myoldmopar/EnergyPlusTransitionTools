@@ -2,7 +2,7 @@ from pathlib import Path
 from subprocess import check_output, CalledProcessError
 from sys import platform
 from typing import List, Optional
-from ep_transition.transition_binary import TransitionBinary
+from energyplus_transition.transition_binary import TransitionBinary
 
 
 class EnergyPlusPath(object):
