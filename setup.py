@@ -1,4 +1,5 @@
 from pathlib import Path
+from platform import system
 from setuptools import setup
 
 from energyplus_transition import NAME, VERSION
@@ -7,6 +8,10 @@ from energyplus_transition import NAME, VERSION
 readme_file = Path(__file__).parent.resolve() / 'README.md'
 readme_contents = readme_file.read_text()
 
+install_requires = ['PLAN-Tools>=0.5']
+if system() == 'Windows':
+    install_requires.append('pypiwin32')
+
 setup(
     name=NAME,
     version=VERSION,
@@ -14,13 +19,14 @@ setup(
     url='https://github.com/myoldmopar/EnergyPlusTransitionTools',
     license='',
     packages=['energyplus_transition'],
-    package_data={},
+    package_data={"energyplus_transition": ["icons/*.png", "icons/*.ico", "icons/*.icns"],},
     include_package_data=True,
     long_description=readme_contents,
     long_description_content_type='text/markdown',
     author="Edwin Lee via NREL via United States Department of Energy",
-    install_requires=[],
+    install_requires=install_requires,
     entry_points={
-        'console_scripts': ['energyplus_transition_gui=energyplus_transition.runner:main_gui']
+        'gui_scripts': ['energyplus_transition_gui=energyplus_transition.runner:main_gui'],
+        'console_scripts': ['energyplus_transition_configure=energyplus_transition.configure:configure_cli']
     }
 )

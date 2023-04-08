@@ -1,15 +1,19 @@
 from json import loads, dumps
 from queue import Queue
 from pathlib import Path
+from platform import system
 import subprocess
 from sys import platform
 from typing import Optional
 
 from tkinter import (
     Tk, StringVar, messagebox, Menu, Button, Frame, LabelFrame, SUNKEN, S, EW, Label, BooleanVar,
-    ACTIVE, DISABLED, filedialog, NSEW, ALL, W, E, IntVar
+    ACTIVE, DISABLED, filedialog, NSEW, ALL, W, E, IntVar, PhotoImage
 )
 from tkinter.ttk import Progressbar
+
+from plan_tools.runtime import fixup_taskbar_icon_on_windows
+
 from energyplus_transition import NAME, VERSION
 from energyplus_transition.energyplus_path import EnergyPlusPath
 from energyplus_transition.transition_run_thread import TransitionRunThread
@@ -76,7 +80,29 @@ class VersionUpdaterWindow(Tk):
     # region class construction and basic event/closing functions
 
     def __init__(self):
-        super().__init__()
+        super().__init__(className=NAME)
+
+        if system() == 'Darwin':
+            self.icon_path = Path(__file__).resolve().parent / 'icons' / 'icon.icns'
+            if self.icon_path.exists():
+                self.iconbitmap(str(self.icon_path))
+            else:
+                print(f"Could not set icon for Mac, expecting to find it at {self.icon_path}")
+        elif system() == 'Windows':
+            self.icon_path = Path(__file__).resolve().parent / 'icons' / 'icon.png'
+            img = PhotoImage(file=str(self.icon_path))
+            if self.icon_path.exists():
+                self.iconphoto(False, img)
+            else:
+                print(f"Could not set icon for Windows, expecting to find it at {self.icon_path}")
+        else:  # Linux
+            self.icon_path = Path(__file__).resolve().parent / 'icons' / 'icon.png'
+            img = PhotoImage(file=str(self.icon_path))
+            if self.icon_path.exists():
+                self.iconphoto(False, img)
+            else:
+                print(f"Could not set icon for Windows, expecting to find it at {self.icon_path}")
+        fixup_taskbar_icon_on_windows(NAME)
 
         self._gui_queue = Queue()
         self._check_queue()

@@ -5,3 +5,4 @@ source = energyplus_transition
 omit =
     */energyplus_transition/gui.py
     */energyplus_transition/runner.py
+    */energyplus_transition/configure.py
