@@ -80,6 +80,7 @@ class VersionUpdaterWindow(Tk):
     # region class construction and basic event/closing functions
 
     def __init__(self):
+        fixup_taskbar_icon_on_windows(NAME)
         super().__init__(className=NAME)
 
         if system() == 'Darwin':
@@ -102,7 +103,6 @@ class VersionUpdaterWindow(Tk):
                 self.iconphoto(False, img)
             else:
                 print(f"Could not set icon for Windows, expecting to find it at {self.icon_path}")
-        fixup_taskbar_icon_on_windows(NAME)
 
         self._gui_queue = Queue()
         self._check_queue()
