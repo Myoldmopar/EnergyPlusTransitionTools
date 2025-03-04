@@ -46,7 +46,7 @@ energyplus_transition_configure = "energyplus_transition.configure:configure_cli
 
 
 [project.optional-dependencies]
-test = ["tox", "pytest", "pytest-cov", "black", "flake8", "mypy", "isort"]
+test = ["tox", "pytest", "pytest-cov", "black", "flake8", "mypy", "isort", "coveralls"]
 
 [tool.black]
 line-length = 120
