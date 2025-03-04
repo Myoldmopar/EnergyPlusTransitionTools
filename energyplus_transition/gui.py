@@ -28,7 +28,7 @@ class Configuration:
         eplus_dir = 'eplus_dir'
         keep_intermediate = 'keep_intermediate'
 
-    def __init__(self):
+    def __init__(self, called_from_ep_cli: bool):
         self.settings_file = Path.home() / ".idfversionupdater.json"
         self.settings = {}
         if self.settings_file.exists():
@@ -52,7 +52,14 @@ class Configuration:
         if Configuration.Keys.language not in self.settings:
             self.settings[Configuration.Keys.language] = Language.English
         # initialize the last eplus install dir
-        if Configuration.Keys.eplus_dir not in self.settings:
+        if called_from_ep_cli:  # if we are called from E+ CLI, set the E+ dir directly from this file path
+            this_file = Path(__file__).resolve()
+            transition_package_dir = this_file.parent
+            python_lib_dir = transition_package_dir.parent
+            eplus_install_dir = python_lib_dir.parent
+            potential_install_dir = str(eplus_install_dir)
+            self.settings[Configuration.Keys.eplus_dir] = str(potential_install_dir)
+        elif Configuration.Keys.eplus_dir not in self.settings:
             potential_install_dir = EnergyPlusPath.try_to_auto_find()
             if potential_install_dir:  # use the auto-found version if it's not None
                 self.settings[Configuration.Keys.eplus_dir] = str(potential_install_dir)
@@ -79,7 +86,7 @@ class VersionUpdaterWindow(Tk):
 
     # region class construction and basic event/closing functions
 
-    def __init__(self):
+    def __init__(self, called_from_ep_cli: bool):
         fixup_taskbar_icon_on_windows(NAME)
         super().__init__(className=NAME)
 
@@ -108,7 +115,7 @@ class VersionUpdaterWindow(Tk):
         self._check_queue()
 
         # load the settings here very early
-        self.conf = Configuration()
+        self.conf = Configuration(called_from_ep_cli)
 
         # initialize some class-level "constants"
         self.pad = {'padx': 3, 'pady': 3}
