@@ -16,7 +16,7 @@ class TestEnergyPlusPath(unittest.TestCase):
 
     def test_auto_find(self):
         found = EnergyPlusPath.try_to_auto_find()
-        self.assertTrue(isinstance(found, Path) or Path is None)  # just check the interface
+        self.assertTrue(found is None or isinstance(found, Path))  # just check the interface
 
     def test_parse_version(self):
         valid = Path("/Applications/EnergyPlus-8-5-0")
