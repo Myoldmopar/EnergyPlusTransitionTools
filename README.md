@@ -17,7 +17,8 @@ Project is continually tested using GitHub Actions
 
 # Releases
 
-[![Release_to_PyPi](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/pypi.yml/badge.svg)](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/pypi.yml)
+
+[![pypi](https://img.shields.io/pypi/v/energyplus-transition-tools.svg)](https://pypi.org/project/energyplus-transition-tools/)
 
 Project is built into a wheel and pushed to pypi for each tag: https://pypi.org/project/ep-transition-tools/.
 To install, it will be `pip install energyplus-transition-tools`.

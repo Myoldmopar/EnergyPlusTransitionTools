@@ -23,8 +23,8 @@ class EnergyPlusPath(object):
         self.transition_directory: Optional[Path] = None
         self.transitions_available: List[TransitionBinary] = []
         self.version: str = "Unknown.Ep.Version"
-        # then overwrite if possible
-        if self.install_root.exists():
+        # then overwrite if possible; we aren't covering this with tests because we'd have to install E+ on CI
+        if self.install_root.exists():  # pragma: no cover
             self.transition_directory = self.install_root / 'PreProcess' / 'IDFVersionUpdater'
             binary_paths = list(self.transition_directory.glob('Transition-V*'))
             self.transitions_available = [TransitionBinary(x) for x in binary_paths]
@@ -42,6 +42,23 @@ class EnergyPlusPath(object):
                 pass
 
     @staticmethod
+    def parse_version(path: Path, mute: bool = False) -> tuple[Optional[float], Optional[Path]]:
+        just_version_suffix = path.name[10:]
+        if just_version_suffix.startswith(('V', '-')):
+            just_version_suffix = just_version_suffix[1:]
+        version_tokens = just_version_suffix.split('-')
+        if len(version_tokens) < 2:
+            if not mute:  # pragma: no cover
+                print(f"Skipping install at: {path}")
+            return None, None
+        try:
+            return float(f"{version_tokens[0]}.{version_tokens[1]}"), path
+        except ValueError:
+            if not mute:  # pragma: no cover
+                print(f"Invalid version format at: {path}")
+            return None, None
+
+    @staticmethod
     def try_to_auto_find() -> Optional[Path]:
         if platform.startswith("linux"):
             install_bases = (Path('/usr/local'), Path('/eplus/installs/'))
@@ -52,30 +69,14 @@ class EnergyPlusPath(object):
         eplus_install_dirs = []
         for base in install_bases:
             eplus_install_dirs.extend(list(base.glob('EnergyPlus*')))
-        if len(eplus_install_dirs) == 0:
+        # not covering either one of these paths
+        if len(eplus_install_dirs) == 0:  # pragma: no cover
             return None
-        highest_version = -1
-        highest_version_instance = None
-        for found_install in eplus_install_dirs:
-            just_version_suffix = found_install.name[10:]
-            if just_version_suffix.startswith('V') or just_version_suffix.startswith('-'):
-                just_version_suffix = just_version_suffix[1:]
-            version_tokens = just_version_suffix.split('-')
-            if len(version_tokens) < 2:
-                print(f"Skipping install at: {found_install}")
-                continue
-            major_dot_minor = f"{version_tokens[0]}.{version_tokens[1]}"
-            this_version = float(major_dot_minor)
-            if this_version > highest_version:
-                highest_version = this_version
-                highest_version_instance = found_install
-        return highest_version_instance
+        return max(
+            (EnergyPlusPath.parse_version(p) for p in eplus_install_dirs),
+            key=lambda x: x[0] if x[0] is not None else -1,
+            default=(None, None)
+        )[1]  # pragma: no cover
 
     def __str__(self) -> str:
         return f"E+Install ({'valid' if self.valid_install else 'invalid'}) : {self.install_root}"
-
-
-if __name__ == "__main__":
-    default = EnergyPlusPath.try_to_auto_find()
-    instance = EnergyPlusPath(str(EnergyPlusPath.try_to_auto_find()))
-    pass

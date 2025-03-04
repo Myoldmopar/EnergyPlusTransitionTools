@@ -3,6 +3,7 @@ source = energyplus_transition
 
 [report]
 omit =
+    */energyplus_transition/__main__.py
     */energyplus_transition/gui.py
     */energyplus_transition/runner.py
     */energyplus_transition/configure.py

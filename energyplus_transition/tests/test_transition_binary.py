@@ -12,6 +12,7 @@ class TestTransitionBinary(unittest.TestCase):
         self.assertEqual(valid_object.binary_name, "Transition-V8-5-0-to-V8-6-0")
         self.assertEqual(valid_object.source_version, 8.5)
         self.assertEqual(valid_object.target_version, 8.6)
+        self.assertIsInstance(str(valid_object), str)
 
     def test_transition_object_just_file_name(self):
         just_file_name = "Transition-V8-5-0-to-V8-6-0"
