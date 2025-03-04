@@ -79,8 +79,7 @@ class Configuration:
             transition_package_dir = this_file.parent
             python_lib_dir = transition_package_dir.parent
             eplus_install_dir = python_lib_dir.parent
-            potential_install_dir = str(eplus_install_dir)
-            self.settings[Configuration.Keys.eplus_dir] = str(potential_install_dir)
+            self.settings[Configuration.Keys.eplus_dir] = str(eplus_install_dir)
         elif Configuration.Keys.eplus_dir not in self.settings:
             potential_install_dir = EnergyPlusPath.try_to_auto_find()
             if potential_install_dir:  # use the auto-found version if it's not None
@@ -133,7 +132,7 @@ class VersionUpdaterWindow(Tk):
             else:
                 print(f"Could not set icon for Windows, expecting to find it at {self.icon_path}")
 
-        self._gui_queue = Queue()
+        self._gui_queue: Queue = Queue()
         self._check_queue()
 
         # load the settings here very early
