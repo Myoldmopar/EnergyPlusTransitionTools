@@ -1,12 +1,34 @@
+from pathlib import Path
 import unittest
 
 
 # EnergyPlusPath is entirely based on an existing installation, so it doesn't make it easy to unit test on a standalone
 # machine without Installing E+ itself
 
-# from EnergyPlusPath import EnergyPlusPath
+from energyplus_transition.energyplus_path import EnergyPlusPath
 
-# class TestEnergyPlusPath(unittest.TestCase):
+
+class TestEnergyPlusPath(unittest.TestCase):
+    def test_basic_invalid_path(self):
+        ep = EnergyPlusPath("")
+        self.assertFalse(ep.valid_install)
+        self.assertIsInstance(str(ep), str)
+
+    def test_auto_find(self):
+        found = EnergyPlusPath.try_to_auto_find()
+        self.assertTrue(found is None or isinstance(found, Path))  # just check the interface
+
+    def test_parse_version(self):
+        valid = Path("/Applications/EnergyPlus-8-5-0")
+        version, _ = EnergyPlusPath.parse_version(valid, mute=True)
+        self.assertEqual(8.5, version)
+        invalid_no_dashes = Path("/Applications/EnergyPlus-TestBuild")
+        version, _ = EnergyPlusPath.parse_version(invalid_no_dashes, mute=True)
+        self.assertIsNone(version)
+        invalid_with_dashes = Path("/Applications/EnergyPlus-Test-Build-1")
+        version, _ = EnergyPlusPath.parse_version(invalid_with_dashes, mute=True)
+        self.assertIsNone(version)
+
 #     def test_proper_path_no_trailing_slash(self):
 #         eight_one = EnergyPlusPath('/Applications/EnergyPlus-8-1-0')
 #         self.assertEqual(eight_one, '8-1-0')

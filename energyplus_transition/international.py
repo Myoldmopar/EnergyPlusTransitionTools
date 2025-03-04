@@ -153,7 +153,7 @@ def set_language(lang):
     CurrentLanguage = lang
 
 
-def report_missing_keys():
+def report_missing_keys(mute: bool = False) -> bool:
     """
     This function simply scans dictionaries to see if any keys are missing from them compared to a baseline.
     The baseline is currently the English dictionary.
@@ -163,14 +163,20 @@ def report_missing_keys():
     known_dictionaries = {
         'Spanish': SpanishDictionary, 'French': FrenchDictionary
     }
+    any_missing = False
     for dict_name, dictionary in known_dictionaries.items():  # add here
-        print("Processing missing keys from dictionary: " + dict_name)
+        if not mute:  # pragma: no cover
+            print("Processing missing keys from dictionary: " + dict_name)
         for key in base_keys:
-            if key not in dictionary:
-                print("Could not find key: \"%s\"" % key)
+            # this should never happen in unit tests, so not covering
+            if key not in dictionary:  # pragma: no cover
+                if not mute:
+                    print("Could not find key: \"%s\"" % key)
+                any_missing = True
+    return True if any_missing else False
 
 
-def translate(key):
+def translate(key, mute: bool = False):
     """
     This function translates a string into a dictionary.
 
@@ -192,9 +198,6 @@ def translate(key):
     if key in dictionary:
         return dictionary[key]
     else:
-        print("Could not find this key in the dictionary: \"%s\"" % key)
+        if not mute:  # pragma: no cover
+            print("Could not find this key in the dictionary: \"%s\"" % key)
         return "TRANSLATION MISSING"
-
-
-if __name__ == "__main__":
-    report_missing_keys()

@@ -50,7 +50,7 @@ class TransitionRunThread(threading.Thread):
         target_backup_file_path.unlink(missing_ok=True)
         try:
             shutil.copyfile(source_file_path, target_backup_file_path)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             print("Cannot copy file, permission problem? " + str(e))
             return False
         return True
@@ -67,7 +67,8 @@ class TransitionRunThread(threading.Thread):
         base_file_name = self.input_file.name
         failed = False
         self.ready_callback(len(self.transitions))
-        for tr in self.transitions:
+        # this whole loop is going to require actually running subprocesses and such, I'm not covering it for now
+        for tr in self.transitions:  # pragma: no cover
             if self.keep_old:
                 backup_success = self.backup_file_before_transition(tr)
                 if not backup_success:
@@ -98,9 +99,10 @@ class TransitionRunThread(threading.Thread):
                     failed = True
                     break
             self.increment_callback()
-        if self.cancelled:
+        # I cannot imagine how to wedge in a cancel or failure here during a unit test, so not covering those
+        if self.cancelled:  # pragma: no cover
             self.done_callback(_("Transition cancelled"))
-        elif failed:
+        elif failed:  # pragma: no cover
             self.done_callback(_("Transition Failed! - Open run directory to read latest audit/error/etc"))
         else:
             self.done_callback(_("All transitions completed successfully - Open run directory for transitioned file"))
