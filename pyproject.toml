@@ -46,7 +46,7 @@ test = ["tox", "pytest", "pytest-cov", "black", "flake8", "mypy", "isort"]
 
 [tool.black]
 line-length = 120
-skip-string-normalization = true
+skip-string-normalization = false
 target-version = ['py312']
 include = '\.pyi?$'
 
