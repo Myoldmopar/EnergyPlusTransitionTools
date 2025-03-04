@@ -1,3 +1,4 @@
+import importlib.metadata
 import subprocess
 from json import dumps, loads
 from pathlib import Path
@@ -32,11 +33,13 @@ from typing import Optional
 
 from plan_tools.runtime import fixup_taskbar_icon_on_windows
 
-from energyplus_transition import NAME, VERSION
+from energyplus_transition import NAME
 from energyplus_transition.energyplus_path import EnergyPlusPath
 from energyplus_transition.international import Language, set_language
 from energyplus_transition.international import translate as _
 from energyplus_transition.transition_run_thread import TransitionRunThread
+
+VERSION = importlib.metadata.version(NAME)
 
 
 class Configuration:
