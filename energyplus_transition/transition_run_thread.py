@@ -1,7 +1,7 @@
-from pathlib import Path
 import shutil
 import subprocess
 import threading
+from pathlib import Path
 from typing import Callable, List
 
 from energyplus_transition.international import translate as _
@@ -23,9 +23,17 @@ class TransitionRunThread(threading.Thread):
     :ivar std_err: The standard error output from the transition process
     """
 
-    def __init__(self, transitions_to_run: List[TransitionBinary], working_directory: Path, original_file_path: Path,
-                 keep_old: bool, ready_callback: Callable, increment_callback: Callable,
-                 msg_callback: Callable, done_callback: Callable):
+    def __init__(
+        self,
+        transitions_to_run: List[TransitionBinary],
+        working_directory: Path,
+        original_file_path: Path,
+        keep_old: bool,
+        ready_callback: Callable,
+        increment_callback: Callable,
+        msg_callback: Callable,
+        done_callback: Callable,
+    ):
         self.p = None
         self.std_out = None
         self.std_err = None
@@ -43,7 +51,7 @@ class TransitionRunThread(threading.Thread):
     def backup_file_before_transition(self, transition_instance: TransitionBinary) -> bool:
         input_file_name = self.input_file.name
         source_file_path = self.run_dir / input_file_name
-        input_name_base = self.input_file.with_suffix('').name
+        input_name_base = self.input_file.with_suffix("").name
         input_name_suffix = self.input_file.suffix
         target_backup_file_name = input_name_base + "_" + str(transition_instance.source_version) + input_name_suffix
         target_backup_file_path = self.run_dir / target_backup_file_name
@@ -79,11 +87,8 @@ class TransitionRunThread(threading.Thread):
                 base_file_name,
             ]
             self.p = subprocess.Popen(
-                command_line_tokens,
-                shell=False,
-                cwd=self.run_dir,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE)
+                command_line_tokens, shell=False, cwd=self.run_dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
             self.msg_callback(_("Running Transition") + " " + str(tr.source_version) + " -> " + str(tr.target_version))
             self.std_out, self.std_err = self.p.communicate()
             if self.cancelled:
@@ -92,10 +97,12 @@ class TransitionRunThread(threading.Thread):
             else:
                 if self.p.returncode == 0:
                     self.msg_callback(
-                        _("Completed Transition") + " " + str(tr.source_version) + " -> " + str(tr.target_version))
+                        _("Completed Transition") + " " + str(tr.source_version) + " -> " + str(tr.target_version)
+                    )
                 else:
                     self.msg_callback(
-                        _("Failed Transition") + " " + str(tr.source_version) + " -> " + str(tr.target_version))
+                        _("Failed Transition") + " " + str(tr.source_version) + " -> " + str(tr.target_version)
+                    )
                     failed = True
                     break
             self.increment_callback()

@@ -14,6 +14,7 @@
 
 import sys
 from pathlib import Path
+import importlib.metadata
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -21,7 +22,9 @@ from pathlib import Path
 package_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(package_root))
 
-from energyplus_transition import NAME, VERSION
+from energyplus_transition import NAME
+VERSION = importlib.metadata.version(NAME)
+
 
 # -- General configuration ------------------------------------------------
 

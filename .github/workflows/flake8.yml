@@ -1,4 +1,4 @@
-name: Flake8
+name: Lint
 
 on: [push]
 
@@ -15,7 +15,16 @@ jobs:
         python-version: 3.12
 
     - name: Install Pip Dependencies
-      run: pip install flake8
+      run: pip install -e .[test]
+
+    - name: Run isort
+      run: isort energyplus_transition tests
+
+    - name: Run black
+      run: black energyplus_transition tests
+
+    - name: Run mypy
+      run: mypy energyplus_transition tests
 
     - name: Run Flake8
-      run: flake8 energyplus_transition
+      run: flake8 energyplus_transition tests

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from energyplus_transition.international import report_missing_keys, set_language, translate, Language
+from energyplus_transition.international import Language, report_missing_keys, set_language, translate
 
 
 class TestInternational(TestCase):
