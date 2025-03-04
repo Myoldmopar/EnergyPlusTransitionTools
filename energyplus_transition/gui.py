@@ -357,7 +357,7 @@ class VersionUpdaterWindow(Tk):
             initialdir=cur_folder,
             filetypes=(
                 ("EnergyPlus Input Files", "*.idf"),
-                ("EnergyPlus Macro Files", ";*.imf")
+                ("EnergyPlus Macro Files", "*.imf")
             )
         )
         if not cur_idf:
