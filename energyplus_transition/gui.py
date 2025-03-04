@@ -12,7 +12,7 @@ from tkinter import (
 )
 from tkinter.ttk import Progressbar
 
-from plan_tools.runtime import fixup_taskbar_icon_on_windows
+from plan_tools.runtime import fixup_taskbar_icon_on_windows  # type: ignore
 
 from energyplus_transition import NAME, VERSION
 from energyplus_transition.energyplus_path import EnergyPlusPath
@@ -52,12 +52,13 @@ class Configuration:
         if Configuration.Keys.language not in self.settings:
             self.settings[Configuration.Keys.language] = Language.English
         # initialize the last eplus install dir
+        potential_install_dir: Path | None = None
         if called_from_ep_cli:  # if we are called from E+ CLI, set the E+ dir directly from this file path
             this_file = Path(__file__).resolve()
             transition_package_dir = this_file.parent
             python_lib_dir = transition_package_dir.parent
             eplus_install_dir = python_lib_dir.parent
-            potential_install_dir = str(eplus_install_dir)
+            potential_install_dir = eplus_install_dir
             self.settings[Configuration.Keys.eplus_dir] = str(potential_install_dir)
         elif Configuration.Keys.eplus_dir not in self.settings:
             potential_install_dir = EnergyPlusPath.try_to_auto_find()
@@ -111,7 +112,7 @@ class VersionUpdaterWindow(Tk):
             else:
                 print(f"Could not set icon for Windows, expecting to find it at {self.icon_path}")
 
-        self._gui_queue = Queue()
+        self._gui_queue: Queue = Queue()
         self._check_queue()
 
         # load the settings here very early

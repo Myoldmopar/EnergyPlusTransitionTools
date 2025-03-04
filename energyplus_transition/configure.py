@@ -1,4 +1,4 @@
-from plan_tools.entry_point import EntryPoint
+from plan_tools.entry_point import EntryPoint  # type: ignore
 from energyplus_transition import NAME
 
 
