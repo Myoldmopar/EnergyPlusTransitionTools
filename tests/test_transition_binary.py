@@ -1,5 +1,5 @@
-from pathlib import Path
 import unittest
+from pathlib import Path
 
 from energyplus_transition.transition_binary import TransitionBinary
 

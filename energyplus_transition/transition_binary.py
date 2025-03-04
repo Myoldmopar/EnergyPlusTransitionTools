@@ -20,10 +20,10 @@ class TransitionBinary(object):
     def __init__(self, full_path: Path):
         self.full_path_to_binary = full_path
         self.binary_name = self.full_path_to_binary.name
-        split_by_v = self.binary_name.split('V')
-        source_token = split_by_v[1].split('-')
+        split_by_v = self.binary_name.split("V")
+        source_token = split_by_v[1].split("-")
         source_string = f"{source_token[0]}.{source_token[1]}"
-        target_token = split_by_v[2].split('-')
+        target_token = split_by_v[2].split("-")
         target_string = f"{target_token[0]}.{target_token[1]}"
         self.source_version = float(source_string)
         self.target_version = float(target_string)
