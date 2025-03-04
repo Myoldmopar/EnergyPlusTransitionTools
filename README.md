@@ -12,6 +12,7 @@ Project is documented on ReadTheDocs.
 
 [![Flake8](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/flake8.yml/badge.svg)](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/flake8.yml)
 [![Run Tests](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/Myoldmopar/EnergyPlusTransitionTools/actions/workflows/unit_tests.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Myoldmopar/EnergyPlusTransitionTools/badge.svg?branch=main)](https://coveralls.io/github/Myoldmopar/EnergyPlusTransitionTools?branch=main)
 
 Project is continually tested using GitHub Actions
 
