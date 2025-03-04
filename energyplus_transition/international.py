@@ -54,7 +54,6 @@ EnglishDictionary = {
         'You must restart the app to make the language change take effect.  Would you like to restart now?'
 }
 
-
 SpanishDictionary = {
     'ABOUT_DIALOG': 'Este programa fue creado por el NREL para el Departamento de Energia de los Estados Unidos.',
     'About...': 'Acerca de...',
@@ -99,9 +98,9 @@ SpanishDictionary = {
         'Debe reiniciar la aplicacion para que el cambio de idioma tenga efecto. Le gustaria reiniciar ahora?'
 }
 
-
 FrenchDictionary = {
-    'ABOUT_DIALOG': 'Ce logiciel a été créé par NREL pour le Departement de l\'Energie des Etats Unis d\'Amérique (US DOE)',
+    'ABOUT_DIALOG':
+        'Ce logiciel a été créé par NREL pour le Departement de l\'Energie des Etats Unis d\'Amérique (US DOE)',
     'About...': 'A propos...',
     'All transitions completed successfully - Open run directory for transitioned file':
         'Toutes les transitions effectuées avec succès - Ouvrir le répertoire du fichier mis à jour',
@@ -143,7 +142,6 @@ FrenchDictionary = {
     'You must restart the app to make the language change take effect.  Would you like to restart now?':
         'Vous devez relancer le logiciel pour effectuer le changement de langue. Voulez-vous relancer maintenant?'
 }
-
 
 
 def set_language(lang):
