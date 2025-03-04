@@ -33,6 +33,10 @@ classifiers = [
     "Operating System :: Unix",
     "Operating System :: MacOS",
 ]
+dependencies = [
+  "PLAN-Tools>=0.5",
+  "pypiwin32; os_name == 'nt'",
+]
 
 [project.entry-points."gui_scripts"]
 energyplus_transition_gui = "energyplus_transition.runner:main_gui"
