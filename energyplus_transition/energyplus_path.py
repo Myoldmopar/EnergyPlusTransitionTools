@@ -61,11 +61,11 @@ class EnergyPlusPath(object):
     @staticmethod
     def try_to_auto_find() -> Optional[Path]:
         if platform.startswith("linux"):
-            install_bases = (Path('/usr/local'), Path('/eplus/installs/'))
+            install_bases = [Path('/usr/local'), Path('/eplus/installs/')]
         elif platform == "darwin":
-            install_bases = (Path('/Applications'),)
+            install_bases = [Path('/Applications')]
         else:  # assuming windows
-            install_bases = (Path(r'C:/'),)
+            install_bases = [Path(r'C:/')]
         eplus_install_dirs = []
         for base in install_bases:
             eplus_install_dirs.extend(list(base.glob('EnergyPlus*')))

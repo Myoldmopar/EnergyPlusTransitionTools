@@ -14,11 +14,10 @@ class Test(TestCase):
         temp_run_dir = Path(mkdtemp())
         copy(temp_file, temp_run_dir)
         t = TransitionRunThread(
-            [],
-            temp_run_dir,
-            temp_file,
+            transitions_to_run={},
+            copy_to_idf_dir=False,
+            working_directory=temp_run_dir,
             keep_old=False,
-            ready_callback=lambda x: x,
             increment_callback=lambda x: x,
             msg_callback=lambda x: x,
             done_callback=lambda x: x,
@@ -26,7 +25,7 @@ class Test(TestCase):
 
         p = "/Applications/EnergyPlus-25-1-0/PreProcess/IDFVersionUpdater/Transition-V24-2-0-to-V25-1-0"
         tb = TransitionBinary(Path(p))
-        t.backup_file_before_transition(tb)
+        t.backup_file_before_transition(tb, temp_file)
         t.run()
         self.assertFalse(t.cancelled)
         t.stop()
