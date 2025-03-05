@@ -43,9 +43,8 @@ EnglishDictionary: dict[str, str] = {
     'List File Version': 'List file may contain multiple versions of files',
     'Menu': 'Menu',
     'Old Version': 'Original IDF Version',
-    'Open Input Directory': 'Open Input Directory',
+    'Open Directory': 'Open Directory',
     'Open File for Transition': 'Open File for Transition',
-    'Open Run Directory': 'Open Run Directory',
     'OUTPUT_PATH':
         'Choose where to place output files, either in the run directory '
         'with the transition binaries, or in the original IDF directory',
@@ -94,8 +93,7 @@ SpanishDictionary: dict[str, str] = {
     'Menu': 'Menú',
     'Old Version': 'Version antigua',
     'Open File for Transition': 'Abrir archivo para la Transición',
-    'Open Input Directory': 'NEED TRANSLATION',
-    'Open Run Directory': 'Directorio de ejecución abierta',
+    'Open Directory': 'NEED TRANSLATION',
     'OUTPUT_PATH': 'NEED TRANSLATION',
     'Program Initialized': 'Programa Initialized',
     'Running Transition': 'Transición corriendo',
@@ -141,8 +139,7 @@ FrenchDictionary: dict[str, str] = {
     'Menu': 'Menu',
     'Old Version': 'Ancienne version',
     'Open File for Transition': 'Ouvrir un fichier pour la transition',
-    'Open Input Directory': 'NEED TRANSLATION',
-    'Open Run Directory': 'Ouvrir le répertoire d\'éxécution',
+    'Open Directory': 'NEED TRANSLATION',
     'OUTPUT_PATH': 'NEED TRANSLATION',
     'Cannot find a matching transition tool for this idf version':
         'Impossible de trouver un utilitaire de Transition pour cette version d\'IDF',
