@@ -15,7 +15,7 @@ class TransitionRunThread(threading.Thread):
     :param transitions_to_run: A dict of Path to list of matching
                                :py:class:`TransitionBinary <TransitionBinary.TransitionBinary>` instances
     :param working_directory: The transition working directory to run transitions in
-    :param keep_old: A flag for whether to keep an extra backup of the original file to be transitioned in the run dir
+    :param keep_old: A flag for whether to keep an extra backup of the original file to be transitioned in the input dir
     :param msg_callback: A Python function to be called back by this thread when a message can be displayed
     :param done_callback: A Python function to be called back by this thread when the transition process is complete
 
@@ -24,7 +24,7 @@ class TransitionRunThread(threading.Thread):
     """
 
     def __init__(self, transitions_to_run: dict[Path, list[TransitionBinary]],
-                 copy_to_idf_dir: bool, working_directory: Path,
+                 working_directory: Path,
                  keep_old: bool, increment_callback: Callable,
                  msg_callback: Callable, done_callback: Callable):
         self.p = None
@@ -33,20 +33,19 @@ class TransitionRunThread(threading.Thread):
         self.transitions = transitions_to_run
         self.run_dir = working_directory
         self.keep_old = keep_old
-        self.copy_to_idf_dir = copy_to_idf_dir
         self.increment_callback = increment_callback
         self.msg_callback = msg_callback
         self.done_callback = done_callback
         self.cancelled = False
         threading.Thread.__init__(self)
 
-    def backup_file_before_transition(self, transition_instance: TransitionBinary, input_file: Path) -> bool:
-        input_file_name = input_file.name
-        source_file_path = self.run_dir / input_file_name
+    @staticmethod
+    def backup_file_before_transition(transition_instance: TransitionBinary, input_file: Path) -> bool:
+        source_file_path = input_file
         input_name_base = input_file.with_suffix('').name
         input_name_suffix = input_file.suffix
         target_backup_file_name = input_name_base + "_" + str(transition_instance.source_version) + input_name_suffix
-        target_backup_file_path = self.run_dir / target_backup_file_name
+        target_backup_file_path = input_file.parent / target_backup_file_name
         target_backup_file_path.unlink(missing_ok=True)
         try:
             shutil.copyfile(source_file_path, target_backup_file_path)
@@ -66,23 +65,16 @@ class TransitionRunThread(threading.Thread):
         failed = False
         # this whole loop is going to require actually running subprocesses and such, I'm not covering it for now
         for file, transition_list in self.transitions.items():  # pragma: no cover
-            original_idf_dir = file.parent
-            shutil.copy(file, self.run_dir)
-            ext_fixed = file.name.replace(".idf", ".idfnew").replace(".imf", ".imfnew")
-            expected_output_file = self.run_dir / ext_fixed
-            base_file_name = file.name
+            audit_file_accumulated = ""
             for tr in transition_list:
+                audit_file_accumulated += f"\n *** TRANSITION AUDIT: {tr.source_version} -> {tr.target_version} ***\n"
                 if self.keep_old:
                     backup_success = self.backup_file_before_transition(tr, file)
                     if not backup_success:
                         failed = True
                         break
-                command_line_tokens = [
-                    tr.full_path_to_binary,
-                    base_file_name,
-                ]
                 self.p = subprocess.Popen(
-                    command_line_tokens,
+                    args=[tr.full_path_to_binary, str(file)],
                     shell=False,
                     cwd=self.run_dir,
                     stdout=subprocess.PIPE,
@@ -96,6 +88,9 @@ class TransitionRunThread(threading.Thread):
                     self.msg_callback(_("Transition Cancelled"))
                     break
                 else:
+                    audit_file_path = self.run_dir / 'Transition.audit'
+                    if audit_file_path.exists():
+                        audit_file_accumulated += audit_file_path.read_text()
                     if self.p.returncode == 0:
                         self.msg_callback(
                             _("Completed Transition") + " " + file.name + " " + str(tr.source_version) + " -> " + str(
@@ -107,9 +102,9 @@ class TransitionRunThread(threading.Thread):
                         failed = True
                         break
                 self.increment_callback()
-            if not self.cancelled and not failed:
-                if self.copy_to_idf_dir:
-                    shutil.copy(expected_output_file, original_idf_dir / ext_fixed)
+            accumulated_audit_file_path = file.parent / f"{file.with_suffix('').name}_Transition.audit"
+            with accumulated_audit_file_path.open('w') as audit_file:
+                audit_file.write(audit_file_accumulated)
         # I cannot imagine how to wedge in a cancel or failure here during a unit test, so not covering those
         if self.cancelled:  # pragma: no cover
             self.done_callback(_("Transition cancelled"))

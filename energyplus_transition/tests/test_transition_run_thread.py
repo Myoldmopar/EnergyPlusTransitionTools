@@ -15,7 +15,6 @@ class Test(TestCase):
         copy(temp_file, temp_run_dir)
         t = TransitionRunThread(
             transitions_to_run={},
-            copy_to_idf_dir=False,
             working_directory=temp_run_dir,
             keep_old=False,
             increment_callback=lambda x: x,

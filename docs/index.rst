@@ -24,7 +24,7 @@ This main window reveals a lot of information.
 
 * The window title bar shows the program version
 
-* The menu dropdown allows the user to specify a language, toggle whether to keep intermediate files, whether to copy final outputs to the original IDF dir, view the About dialog, or exit the program.
+* The menu dropdown allows the user to specify a language, toggle whether to keep intermediate files, view the About dialog, or exit the program.
 
 * The first section of the main form is about specifying an EnergyPlus install directory; upon selecting a folder, the label will include extra information
 
@@ -47,7 +47,7 @@ Instead of manually updating each input file, they will:
 
 * Click the ``Update`` button to initiate the transition up to the latest version.  For this example, it would transition from 8.1 to 23.1 without any extra steps.  If the original input file was an older version, multiple transition steps would be performed to get to the latest version
 
-* The user would then click the ``Open Run Directory`` button to open a window to the new input file, and copy it to be placed back into the user's desired location to be run with the latest version (23.1 in this example)
+* The user would then click the ``Open Directory`` button to open a window to the input file location to be run with the latest version (23.1 in this example)
 
 -------------------------
 Source Code Documentation
