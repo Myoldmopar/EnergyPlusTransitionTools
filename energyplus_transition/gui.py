@@ -1,3 +1,4 @@
+from collections import defaultdict
 from json import loads, dumps
 from queue import Queue
 from pathlib import Path
@@ -174,6 +175,7 @@ class VersionUpdaterWindow(Tk):
         self._tk_var_selected_idf_version = StringVar(value=_('Old Version'))
         self._tk_var_eplus_version = StringVar(value="<eplus_version>")
         self._tk_var_progress = IntVar(value=0)
+        self._tk_var_copy_to_idf_dir = BooleanVar(value=True)
 
         def trace_last_idf(*_):
             self.conf.settings[Configuration.Keys.last_idf] = self._tk_var_idf_path.get()
@@ -209,8 +211,12 @@ class VersionUpdaterWindow(Tk):
         )
         menu_file.add_separator()
         menu_file.add_checkbutton(
-            label=_('Keep Intermediate Versions of Files?'), onvalue=True,
-            offvalue=False, variable=self._tk_var_keep_intermediate
+            label=_('Keep Intermediate Versions of Files?'),
+            onvalue=True, offvalue=False, variable=self._tk_var_keep_intermediate
+        )
+        menu_file.add_checkbutton(
+            label=_('Copy output files to original IDF directory?'),
+            onvalue=True, offvalue=False, variable=self._tk_var_copy_to_idf_dir
         )
         menu_file.add_command(
             label=_('About...'),
@@ -252,6 +258,8 @@ class VersionUpdaterWindow(Tk):
         lf = Frame(self)
         self.button_open_run_dir = Button(lf, text=_('Open Run Directory'), command=self._on_press_open_run_dir)
         self.button_open_run_dir.grid(row=0, column=0, **self.pad)
+        self.button_open_input_dir = Button(lf, text=_('Open Input Directory'), command=self._on_press_open_input_dir)
+        self.button_open_input_dir.grid(row=0, column=1, **self.pad)
         self.button_update_file = Button(lf, text=_('Update File'), command=self._on_press_update_idf)
         self.button_update_file.grid(row=0, column=2, **self.pad)
         self.button_cancel = Button(lf, text=_('Cancel Run'), command=self._on_press_cancel)
@@ -259,6 +267,7 @@ class VersionUpdaterWindow(Tk):
         lf.grid_columnconfigure(ALL, weight=1)
         lf.grid(row=2, column=0, sticky=EW, **self.pad)
 
+        # then the status bar
         status_frame = Frame(self)
         self._progress = Progressbar(status_frame, variable=self._tk_var_progress)
         self._progress.grid(row=0, column=0, sticky=EW)
@@ -291,7 +300,10 @@ class VersionUpdaterWindow(Tk):
             if self.eplus_install.valid_install and idf_path.exists():
                 self.on_msg(_("IDF File exists, ready to go"))
                 self.idf_version = self.get_idf_version(idf_path)
-                self._tk_var_selected_idf_version.set(f"{_('Old Version')}: {self.idf_version}")
+                if idf_path.name.endswith('.lst'):
+                    self._tk_var_selected_idf_version.set(f"{_('List File Version')}")
+                else:
+                    self._tk_var_selected_idf_version.set(f"{_('Old Version')}: {self.idf_version}")
                 self.button_update_file['state'] = ACTIVE
             else:
                 self.on_msg(_("IDF File doesn't exist at path given; cannot transition"))
@@ -348,6 +360,21 @@ class VersionUpdaterWindow(Tk):
         except Exception as e:
             messagebox.showerror(_("Could not open run directory") + str(e))
 
+    def _on_press_open_input_dir(self):
+        """
+        This function handles the request to open the current input file directory in the default application
+        """
+        try:
+            if platform.startswith("linux"):
+                open_cmd = "xdg-open"
+            elif platform == "darwin":
+                open_cmd = "open"
+            else:  # assuming windows  platform.startswith("win32"):
+                open_cmd = "explorer"
+            subprocess.Popen([open_cmd, Path(self._tk_var_idf_path.get()).parent], shell=False)
+        except Exception as e:
+            messagebox.showerror(_("Could not open run directory") + str(e))
+
     def _on_press_choose_idf(self):
         """
         This function handles the request to choose a new idf, opening a dialog, and updating settings if applicable
@@ -358,7 +385,8 @@ class VersionUpdaterWindow(Tk):
             initialdir=cur_folder,
             filetypes=(
                 ("EnergyPlus Input Files", "*.idf"),
-                ("EnergyPlus Macro Files", "*.imf")
+                ("EnergyPlus Macro Files", "*.imf"),
+                ("EnergyPlus List File", "*.lst"),
             )
         )
         if not cur_idf:
@@ -369,26 +397,44 @@ class VersionUpdaterWindow(Tk):
         self.conf.settings[Configuration.Keys.last_idf] = cur_idf
         self._refresh_gui_state()
 
-    def _on_press_update_idf(self):
+    def _on_press_update_idf(self) -> None:
         """
         This function handles the request to run Transition itself, building up the list of transitions,
         creating a new thread instance, prepping the gui, and running it
         """
-        if self.idf_version not in [tr.source_version for tr in self.eplus_install.transitions_available]:
-            self.on_msg(_("Cannot find a matching transition tool for this idf version"))
+        file_paths_and_versions_to_convert: dict[str, float] = {}
+        if self._tk_var_idf_path.get().endswith('.lst'):
+            p_list = Path(self._tk_var_idf_path.get())
+            contents = p_list.read_text().strip()
+            file_list = [x.strip() for x in contents.split('\n')]
+            for f in file_list:
+                p_input = Path(f)
+                version = self.get_idf_version(p_input)
+                if version not in [tr.source_version for tr in self.eplus_install.transitions_available]:
+                    self.on_msg(_("Cannot find a matching transition tool for this idf version"))
+                else:
+                    file_paths_and_versions_to_convert[f] = version
+        else:
+            if self.idf_version not in [tr.source_version for tr in self.eplus_install.transitions_available]:
+                self.on_msg(_("Cannot find a matching transition tool for this idf version"))
+            else:
+                file_paths_and_versions_to_convert[self.conf.settings[Configuration.Keys.last_idf]] = self.idf_version
         # we need to build up the list of transition steps to perform
         self._tk_var_progress.set(0)
-        transitions_to_run = []
-        for tr in self.eplus_install.transitions_available:
-            if tr.source_version < self.idf_version:
-                continue  # skip this older version
-            transitions_to_run.append(tr)
+        num_total_transitions = 0
+        file_paths_and_transition_list = defaultdict(list)
+        for file, original_version in file_paths_and_versions_to_convert.items():
+            for tr in self.eplus_install.transitions_available:
+                if tr.source_version < original_version:
+                    continue
+                file_paths_and_transition_list[Path(file)].append(tr)
+                num_total_transitions += 1
+        self._on_ready(num_total_transitions)
         self.running_transition_thread = TransitionRunThread(
-            transitions_to_run,
+            file_paths_and_transition_list,
+            self._tk_var_copy_to_idf_dir.get(),
             self.eplus_install.transition_directory,
-            Path(self.conf.settings[Configuration.Keys.last_idf]),
             self._tk_var_keep_intermediate.get(),
-            self._callback_on_ready,
             self._callback_on_increment,
             self.callback_on_msg,
             self.callback_on_done
@@ -404,9 +450,6 @@ class VersionUpdaterWindow(Tk):
     # endregion
 
     # region background thread callbacks and handlers
-
-    def _callback_on_ready(self, num_steps: int):
-        self._gui_queue.put(lambda: self._on_ready(num_steps))
 
     def _on_ready(self, num_steps: int):
         self._progress['maximum'] = num_steps

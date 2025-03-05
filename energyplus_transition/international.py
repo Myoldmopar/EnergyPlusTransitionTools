@@ -10,7 +10,7 @@ class Language:
 # This variable is a global parameter to hold the language state for the running program
 CurrentLanguage = Language.English
 
-EnglishDictionary = {
+EnglishDictionary: dict[str, str] = {
     'ABOUT_DIALOG': 'This program was created by NREL for the United States Department of Energy.',
     'About...': 'About...',
     'All transitions completed successfully - Open run directory for transitioned file':
@@ -24,6 +24,7 @@ EnglishDictionary = {
     'Choose File to Update...': 'Choose File to Update...',
     'Close': 'Close',
     'Completed Transition': 'Completed Transition',
+    'Copy output files to original IDF directory?': 'Copy output files to original IDF directory?',
     'Could not open run directory': 'Could not open run directory',
     'EnergyPlus Installation': 'EnergyPlus Installation',
     'EnergyPlus Version': 'EnergyPlus Version',
@@ -34,19 +35,24 @@ EnglishDictionary = {
     'IDF File doesn\'t exist at path given; cannot transition':
         'IDF File doesn\'t exist or invalid E+ install; cannot transition',
     'IDF File exists, ready to go': 'IDF File exists, ready to go',
-    'IDF Selection': 'IDF Selection',
+    'IDF Selection': 'IDF or LST Selection',
     'Install Details: ': 'Install Details: ',
     'Invalid Version': 'Invalid Version',
     'Keep Intermediate Versions of Files?': 'Keep Intermediate Versions of Files?',
     'Language Confirmation': 'Language Confirmation',
+    'List File Version': 'List file may contain multiple versions of files',
     'Menu': 'Menu',
     'Old Version': 'Original IDF Version',
+    'Open Input Directory': 'Open Input Directory',
     'Open File for Transition': 'Open File for Transition',
     'Open Run Directory': 'Open Run Directory',
+    'OUTPUT_PATH':
+        'Choose where to place output files, either in the run directory '
+        'with the transition binaries, or in the original IDF directory',
     'Program Initialized': 'Program Initialized',
     'Running Transition': 'Running Transition',
     'Selected Directory: ': 'Selected Directory: ',
-    'Selected IDF: ': 'Selected IDF: ',
+    'Selected IDF: ': 'Selected Input File: ',
     'Transition Cancelled': 'Transition Cancelled',
     'Transition cancelled': 'Transition cancelled',
     'Update File': 'Update File',
@@ -54,7 +60,7 @@ EnglishDictionary = {
         'You must restart the app to make the language change take effect.  Would you like to restart now?'
 }
 
-SpanishDictionary = {
+SpanishDictionary: dict[str, str] = {
     'ABOUT_DIALOG': 'Este programa fue creado por el NREL para el Departamento de Energia de los Estados Unidos.',
     'About...': 'Acerca de...',
     'All transitions completed successfully - Open run directory for transitioned file':
@@ -68,6 +74,7 @@ SpanishDictionary = {
     'Choose File to Update...': 'Elegir archivo para actualizar ...',
     'Close': 'Cerca',
     'Completed Transition': 'Transición completado',
+    'Copy output files to original IDF directory?': 'NEED TRANSLATION',
     'Could not open run directory': 'No se pudo abrir directorio de ejecución',
     'EnergyPlus Installation': 'EnergyPlus instalación',
     'EnergyPlus Version': 'Versión del EnergyPlus',
@@ -83,10 +90,13 @@ SpanishDictionary = {
     'Invalid Version': 'Versión inválida',
     'Keep Intermediate Versions of Files?': 'Mantener versiones intermedias de Archivos?',
     'Language Confirmation': 'Confirmar idioma',
+    'List File Version': 'NEED TRANSLATION',
     'Menu': 'Menú',
     'Old Version': 'Version antigua',
     'Open File for Transition': 'Abrir archivo para la Transición',
+    'Open Input Directory': 'NEED TRANSLATION',
     'Open Run Directory': 'Directorio de ejecución abierta',
+    'OUTPUT_PATH': 'NEED TRANSLATION',
     'Program Initialized': 'Programa Initialized',
     'Running Transition': 'Transición corriendo',
     'Selected Directory: ': 'Directorio seleccionado: ',
@@ -98,7 +108,7 @@ SpanishDictionary = {
         'Debe reiniciar la aplicacion para que el cambio de idioma tenga efecto. Le gustaria reiniciar ahora?'
 }
 
-FrenchDictionary = {
+FrenchDictionary: dict[str, str] = {
     'ABOUT_DIALOG':
         'Ce logiciel a été créé par NREL pour le Departement de l\'Energie des Etats Unis d\'Amérique (US DOE)',
     'About...': 'A propos...',
@@ -111,6 +121,7 @@ FrenchDictionary = {
     'Choose File to Update...': 'Choisissez un Fichier à mettre à jour ...',
     'Close': 'Fermer',
     'Completed Transition': 'Transition terminée',
+    'Copy output files to original IDF directory?': 'NEED TRANSLATION',
     'Could not open run directory': 'Impossible d\'ouvrir le répertoire d\'éxecution',
     'EnergyPlus Installation': "EnergyPlus Installation",
     'EnergyPlus Version': 'Version du EnergyPlus',
@@ -126,10 +137,13 @@ FrenchDictionary = {
     'Invalid Version': "Version invalide",
     'Keep Intermediate Versions of Files?': 'Garder les versions intermediaires des fichiers?',
     'Language Confirmation': "Confirmer la langue",
+    'List File Version': 'NEED TRANSLATION',
     'Menu': 'Menu',
     'Old Version': 'Ancienne version',
     'Open File for Transition': 'Ouvrir un fichier pour la transition',
+    'Open Input Directory': 'NEED TRANSLATION',
     'Open Run Directory': 'Ouvrir le répertoire d\'éxécution',
+    'OUTPUT_PATH': 'NEED TRANSLATION',
     'Cannot find a matching transition tool for this idf version':
         'Impossible de trouver un utilitaire de Transition pour cette version d\'IDF',
     'Program Initialized': 'Programme initialisé',
@@ -181,6 +195,7 @@ def translate(key, mute: bool = False):
     This function translates a string into a dictionary.
 
     :param key: The string to translate
+    :param mute: A unit test override to hush output messaging.
     :return: The translated string
     """
     # if for some reason blank, just return blank

@@ -24,13 +24,13 @@ This main window reveals a lot of information.
 
 * The window title bar shows the program version
 
-* The menu dropdown allows the user to specify a language, toggle whether to keep intermediate files, view the About dialog, or exit the program.
+* The menu dropdown allows the user to specify a language, toggle whether to keep intermediate files, whether to copy final outputs to the original IDF dir, view the About dialog, or exit the program.
 
 * The first section of the main form is about specifying an EnergyPlus install directory; upon selecting a folder, the label will include extra information
 
-* The second section of the main form is about specifying an input file to transition; upon selecting a file, the label will include extra information about the file
+* The second section of the main form is about specifying an input file to transition; upon selecting a file, the label will include extra information about the file.  If you specify a .lst file, it should contain a list of file paths to transition.
 
-* There are then a set of buttons that execute program actions, including opening the run directory which will contain output files, and running/cancelling the transition process
+* There are then a set of buttons that execute program actions, including opening the run directory which will contain output files, opening the input file directory, and running/cancelling the transition process
 
 * The status bar shows progress and updates during the program operation, including running each transition and when the whole transition is complete or if there was a failure
 
