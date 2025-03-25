@@ -136,7 +136,7 @@ class VersionUpdaterWindow(Tk):
         # build up the GUI itself
         self._define_tk_variables()
         self._build_gui()
-        self.title(f"{NAME} ({VERSION})")
+        self.title(f"IDF Version Updater ({VERSION})")
 
         # update the list of E+ versions
         self._refresh_for_new_eplus_install()
