@@ -1,4 +1,7 @@
+from contextlib import contextmanager
 from pathlib import Path
+import shutil
+import tempfile
 
 
 class TransitionBinary(object):
@@ -47,3 +50,17 @@ class TransitionBinary(object):
 
     def __str__(self) -> str:
         return f"TransitionBinary ({self.source_version} -> {self.target_version}) - {self.full_path_to_binary}"
+
+
+@contextmanager
+def prepare_transition_directory(transitions: list[TransitionBinary]):
+    """Create a temporary directory with all support files needed for the given transitions, deduplicating copies."""
+    with tempfile.TemporaryDirectory() as tmp:
+        run_dir = Path(tmp)
+        copied: set[str] = set()
+        for tr in transitions:
+            for f in (tr.source_version_idd_path, tr.target_version_idd_path, tr.report_variables_path):
+                if f.name not in copied and f.is_file():
+                    shutil.copy(f, run_dir / f.name)
+                    copied.add(f.name)
+        yield run_dir

@@ -5,7 +5,7 @@ import threading
 from typing import Callable
 
 from energyplus_transition.international import translate as _
-from energyplus_transition.transition_binary import TransitionBinary
+from energyplus_transition.transition_binary import TransitionBinary, prepare_transition_directory
 
 
 class TransitionRunThread(threading.Thread):
@@ -14,7 +14,6 @@ class TransitionRunThread(threading.Thread):
 
     :param transitions_to_run: A dict of Path to list of matching
                                :py:class:`TransitionBinary <TransitionBinary.TransitionBinary>` instances
-    :param working_directory: The transition working directory to run transitions in
     :param keep_old: A flag for whether to keep an extra backup of the original file to be transitioned in the input dir
     :param msg_callback: A Python function to be called back by this thread when a message can be displayed
     :param done_callback: A Python function to be called back by this thread when the transition process is complete
@@ -24,14 +23,12 @@ class TransitionRunThread(threading.Thread):
     """
 
     def __init__(self, transitions_to_run: dict[Path, list[TransitionBinary]],
-                 working_directory: Path,
                  keep_old: bool, increment_callback: Callable,
                  msg_callback: Callable, done_callback: Callable):
         self.p = None
         self.std_out = None
         self.std_err = None
         self.transitions = transitions_to_run
-        self.run_dir = working_directory
         self.keep_old = keep_old
         self.increment_callback = increment_callback
         self.msg_callback = msg_callback
@@ -65,46 +62,47 @@ class TransitionRunThread(threading.Thread):
         failed = False
         # this whole loop is going to require actually running subprocesses and such, I'm not covering it for now
         for file, transition_list in self.transitions.items():  # pragma: no cover
-            audit_file_accumulated = ""
-            for tr in transition_list:
-                audit_file_accumulated += f"\n *** TRANSITION AUDIT: {tr.source_version} -> {tr.target_version} ***\n"
-                if self.keep_old:
-                    backup_success = self.backup_file_before_transition(tr, file)
-                    if not backup_success:
-                        failed = True
+            with prepare_transition_directory(transition_list) as run_dir:
+                audit_file_accumulated = ""
+                for tr in transition_list:
+                    audit_file_accumulated += f"\n *** TRANSITION AUDIT: {tr.source_version} -> {tr.target_version} ***\n"
+                    if self.keep_old:
+                        backup_success = self.backup_file_before_transition(tr, file)
+                        if not backup_success:
+                            failed = True
+                            break
+                    self.p = subprocess.Popen(
+                        args=[tr.full_path_to_binary, str(file)],
+                        shell=False,
+                        cwd=run_dir,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE)
+                    self.msg_callback(
+                        _("Running Transition") + " " + file.name + " " + str(tr.source_version) + " -> " + str(
+                            tr.target_version)
+                    )
+                    self.std_out, self.std_err = self.p.communicate()
+                    if self.cancelled:
+                        self.msg_callback(_("Transition Cancelled"))
                         break
-                self.p = subprocess.Popen(
-                    args=[tr.full_path_to_binary, str(file)],
-                    shell=False,
-                    cwd=self.run_dir,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE)
-                self.msg_callback(
-                    _("Running Transition") + " " + file.name + " " + str(tr.source_version) + " -> " + str(
-                        tr.target_version)
-                )
-                self.std_out, self.std_err = self.p.communicate()
-                if self.cancelled:
-                    self.msg_callback(_("Transition Cancelled"))
-                    break
-                else:
-                    audit_file_path = self.run_dir / 'Transition.audit'
-                    if audit_file_path.exists():
-                        audit_file_accumulated += audit_file_path.read_text()
-                    if self.p.returncode == 0:
-                        self.msg_callback(
-                            _("Completed Transition") + " " + file.name + " " + str(tr.source_version) + " -> " + str(
-                                tr.target_version))
                     else:
-                        self.msg_callback(
-                            _("Failed Transition") + " " + file.name + " " + str(tr.source_version) + " -> " + str(
-                                tr.target_version))
-                        failed = True
-                        break
-                self.increment_callback()
-            accumulated_audit_file_path = file.parent / f"{file.with_suffix('').name}_Transition.audit"
-            with accumulated_audit_file_path.open('w') as audit_file:
-                audit_file.write(audit_file_accumulated)
+                        audit_file_path = run_dir / 'Transition.audit'
+                        if audit_file_path.exists():
+                            audit_file_accumulated += audit_file_path.read_text()
+                        if self.p.returncode == 0:
+                            self.msg_callback(
+                                _("Completed Transition") + " " + file.name + " " + str(tr.source_version) + " -> " + str(
+                                    tr.target_version))
+                        else:
+                            self.msg_callback(
+                                _("Failed Transition") + " " + file.name + " " + str(tr.source_version) + " -> " + str(
+                                    tr.target_version))
+                            failed = True
+                            break
+                    self.increment_callback()
+                accumulated_audit_file_path = file.parent / f"{file.with_suffix('').name}_Transition.audit"
+                with accumulated_audit_file_path.open('w') as audit_file:
+                    audit_file.write(audit_file_accumulated)
         # I cannot imagine how to wedge in a cancel or failure here during a unit test, so not covering those
         if self.cancelled:  # pragma: no cover
             self.done_callback(_("Transition cancelled"))

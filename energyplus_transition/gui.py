@@ -416,7 +416,6 @@ class VersionUpdaterWindow(Tk):
         self._progress['maximum'] = num_total_transitions
         self.running_transition_thread = TransitionRunThread(
             transitions_to_run=file_paths_and_transition_list,
-            working_directory=self.eplus_install.transition_directory,
             keep_old=self._tk_var_keep_intermediate.get(),
             increment_callback=self._callback_on_increment,
             msg_callback=self.callback_on_msg,
