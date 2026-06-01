@@ -42,7 +42,7 @@ class EnergyPlusPath(object):
             self.transition_directory = self.install_root
 
         binary_paths = list(self.transition_directory.glob('Transition-V*'))
-        self.transitions_available = [TransitionBinary(x) for x in binary_paths]
+        self.transitions_available = [tb for x in binary_paths if (tb := TransitionBinary(x)).has_support_files()]
         self.transitions_available.sort(key=lambda tb: tb.source_version)
         try:
             string_version_output = check_output([str(energyplus_exe), '-v'], text=True, encoding='utf-8')

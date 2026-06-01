@@ -27,6 +27,23 @@ class TransitionBinary(object):
         target_string = f"{target_token[0]}.{target_token[1]}"
         self.source_version = float(source_string)
         self.target_version = float(target_string)
+        idd_dir = self.full_path_to_binary.parent
+        source_ver_str = '-'.join(source_token[:3])
+        target_ver_str = '-'.join(target_token[:3])
+        self.source_version_idd_path = idd_dir / f"V{source_ver_str}-Energy+.idd"
+        self.target_version_idd_path = idd_dir / f"V{target_ver_str}-Energy+.idd"
+        self.report_variables_path = idd_dir / f"Report Variables {source_ver_str} to {target_ver_str}.csv"
+
+    def has_support_files(self) -> bool:
+        """Return True if both IDD files and the report variables CSV are present alongside the binary."""
+        return (
+            self.source_version_idd_path.is_file()
+            and self.target_version_idd_path.is_file()
+            and self.report_variables_path.is_file()
+        )
+
+    def __repr__(self) -> str:
+        return f"TransitionBinary ({self.source_version} -> {self.target_version})"
 
     def __str__(self) -> str:
         return f"TransitionBinary ({self.source_version} -> {self.target_version}) - {self.full_path_to_binary}"
