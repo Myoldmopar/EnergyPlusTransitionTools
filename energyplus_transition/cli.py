@@ -5,7 +5,10 @@ from multiprocessing import cpu_count
 from pathlib import Path
 
 from energyplus_transition.energyplus_path import EnergyPlusPath
-from energyplus_transition.input_files import get_selected_input_files
+from energyplus_transition.input_files import (
+    cleanup_transition_artifacts,
+    get_selected_input_files,
+)
 from energyplus_transition.transition_run_thread import TransitionRun
 
 try:
@@ -106,10 +109,17 @@ class Runner:
                 )
                 continue
             transitions = [tr for tr in eplus_install.transitions_available if tr.source_version >= input_file.version]
+            if not transitions:
+                self.on_msg(f"No transitions needed for: {input_file.path}, skipping")
+                continue
 
             self.num_total_files += 1
             self.num_total_transitions += len(transitions)
 
+            # Still backup the original one
+            if not save_intermediate:
+                TransitionRun.backup_file_before_transition(transition_instance=transitions[0],
+                                                            input_file=input_file.path)
             self.runs.append(
                 TransitionRun(
                     input_file=input_file.path,
@@ -139,6 +149,7 @@ class Runner:
             if file_bar is not None:
                 file_bar.close()
             self.on_done(message)
+            cleanup_transition_artifacts(idf_path=run.input_file)
 
         return on_started, on_increment, on_done
 

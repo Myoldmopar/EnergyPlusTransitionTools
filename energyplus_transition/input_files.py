@@ -85,3 +85,14 @@ def get_idf_version(path_to_idf: Path) -> float | None:
             version_number = float("%s.%s" % (version_string_tokens[0], version_string_tokens[1]))
             return version_number
     return None
+
+
+def cleanup_transition_artifacts(idf_path: Path) -> None:
+    """Remove any transition artifacts from the given input file's directory.
+
+    Remove any (idf|imf|rvi)(new|old) files that share the same name as the given input file, in the same directory.
+    """
+    for suffix in {".idfnew", ".idfold", ".imfnew", ".imfold", ".rvinew", ".rviold"}:
+        artifact = idf_path.with_suffix(suffix)
+        if artifact.is_file():
+            artifact.unlink()
