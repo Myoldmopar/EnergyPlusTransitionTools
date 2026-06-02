@@ -1,21 +1,11 @@
-from collections.abc import Callable, Generator
 from pathlib import Path
 from tempfile import TemporaryDirectory, mktemp
 from unittest.mock import MagicMock, patch
 
-import pytest
-from energyplus_transition.energyplus_path import EnergyPlusPath
 from energyplus_transition.input_files import get_idf_version
-from energyplus_transition.international import Language, set_language
 from energyplus_transition.transition_binary import TransitionBinary
 from energyplus_transition.transition_run import TransitionRun
-
-
-@pytest.fixture(autouse=True)
-def reset_language() -> Generator:
-    set_language(Language.English)
-    yield
-    set_language(Language.English)
+from tests.types import FakeEplusInstall
 
 
 def test_backup_file_before_transition() -> None:
@@ -45,7 +35,7 @@ def test_cancelled_flag() -> None:
     assert t.cancelled
 
 
-def test_callbacks(fake_eplus_install: Callable[[list[tuple[str, str]]], EnergyPlusPath]) -> None:
+def test_callbacks(fake_eplus_install: FakeEplusInstall) -> None:
     eplus = fake_eplus_install([("24-1-0", "24-2-0"), ("24-2-0", "25-1-0")])
 
     started_calls = []
@@ -76,7 +66,7 @@ def test_callbacks(fake_eplus_install: Callable[[list[tuple[str, str]]], EnergyP
     assert any("24.2" in m and "25.1" in m for m in messages)
 
 
-def test_run_transitions(fake_eplus_install: Callable[[list[tuple[str, str]]], EnergyPlusPath]) -> None:
+def test_run_transitions(fake_eplus_install: FakeEplusInstall) -> None:
     eplus = fake_eplus_install([("24-1-0", "24-2-0"), ("24-2-0", "25-1-0")])
     assert eplus.valid_install
     assert len(eplus.transitions_available) == 2
@@ -99,7 +89,7 @@ def test_run_transitions(fake_eplus_install: Callable[[list[tuple[str, str]]], E
         assert idf.with_suffix(".idfold").exists()
 
 
-def test_keep_old(fake_eplus_install: Callable[[list[tuple[str, str]]], EnergyPlusPath]) -> None:
+def test_keep_old(fake_eplus_install: FakeEplusInstall) -> None:
     eplus = fake_eplus_install([("24-1-0", "24-2-0"), ("24-2-0", "25-1-0")])
     with TemporaryDirectory() as tmp:
         idf = Path(tmp) / "test.idf"
@@ -121,16 +111,18 @@ def _make_mock_run(t: TransitionRun, returncode: int = 0, cancel: bool = False) 
     mock_proc = MagicMock()
     mock_proc.returncode = returncode
     if cancel:
+
         def communicate_and_cancel() -> tuple[bytes, bytes]:
             t.stop()
             return b"", b""
+
         mock_proc.communicate.side_effect = communicate_and_cancel
     else:
         mock_proc.communicate.return_value = (b"", b"")
     return mock_proc
 
 
-def test_cancelled_mid_transition(fake_eplus_install: Callable[[list[tuple[str, str]]], EnergyPlusPath]) -> None:
+def test_cancelled_mid_transition(fake_eplus_install: FakeEplusInstall) -> None:
     eplus = fake_eplus_install([("24-1-0", "24-2-0"), ("24-2-0", "25-1-0")])
     with TemporaryDirectory() as tmp:
         idf = Path(tmp) / "test.idf"
@@ -152,7 +144,7 @@ def test_cancelled_mid_transition(fake_eplus_install: Callable[[list[tuple[str, 
         assert "cancelled" in done_calls[0].lower()
 
 
-def test_failed_transition(fake_eplus_install: Callable[[list[tuple[str, str]]], EnergyPlusPath]) -> None:
+def test_failed_transition(fake_eplus_install: FakeEplusInstall) -> None:
     eplus = fake_eplus_install([("24-1-0", "24-2-0"), ("24-2-0", "25-1-0")])
     with TemporaryDirectory() as tmp:
         idf = Path(tmp) / "test.idf"

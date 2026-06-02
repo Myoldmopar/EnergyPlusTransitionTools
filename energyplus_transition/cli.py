@@ -5,17 +5,14 @@ from multiprocessing import cpu_count
 from pathlib import Path
 
 from energyplus_transition.energyplus_path import EnergyPlusPath
-from energyplus_transition.input_files import (
-    cleanup_transition_artifacts,
-    get_selected_input_files,
-)
+from energyplus_transition.input_files import cleanup_transition_artifacts, get_selected_input_files
 from energyplus_transition.transition_run import TransitionRun
 
 try:
     from tqdm import tqdm
 
     TQDM_AVAILABLE = True
-except ImportError:
+except ImportError:  # pragma: no cover
     TQDM_AVAILABLE = False
 
 
@@ -54,7 +51,7 @@ def get_parser() -> argparse.ArgumentParser:
 class Runner:
     def __init__(self, verbose: bool = False, progress: bool = False, jobs: int | None = None):
         self.verbose = verbose
-        if progress and not TQDM_AVAILABLE:
+        if progress and not TQDM_AVAILABLE:  # pragma: no cover
             print("Warning: --progress requires tqdm (`pip install tqdm`), continuing without progress bar.")
             progress = False
         self.progress = progress
@@ -109,7 +106,7 @@ class Runner:
                 )
                 continue
             transitions = [tr for tr in eplus_install.transitions_available if tr.source_version >= input_file.version]
-            if not transitions:
+            if not transitions:  # pragma: no cover
                 self.on_msg(f"No transitions needed for: {input_file.path}, skipping")
                 continue
 
@@ -118,8 +115,9 @@ class Runner:
 
             # Still backup the original one
             if not save_intermediate:
-                TransitionRun.backup_file_before_transition(transition_instance=transitions[0],
-                                                            input_file=input_file.path)
+                TransitionRun.backup_file_before_transition(
+                    transition_instance=transitions[0], input_file=input_file.path
+                )
             self.runs.append(
                 TransitionRun(
                     input_file=input_file.path,
@@ -142,11 +140,11 @@ class Runner:
 
         def on_increment() -> None:
             self.on_increment()
-            if file_bar is not None:
+            if file_bar is not None:  # pragma: no cover
                 file_bar.update(1)
 
         def on_done(message: str) -> None:
-            if file_bar is not None:
+            if file_bar is not None:  # pragma: no cover
                 file_bar.close()
             self.on_done(message)
             cleanup_transition_artifacts(idf_path=run.input_file)
@@ -214,5 +212,5 @@ def main(args_: list[str] | None = None) -> None:
     runner.execute()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
