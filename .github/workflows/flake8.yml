@@ -17,7 +17,7 @@ jobs:
         python-version: 3.12
 
     - name: Install Pip Dependencies
-      run: pip install flake8 mypy
+      run: pip install flake8 mypy types-tqdm
 
     - name: Run mypy
       run: mypy energyplus_transition
