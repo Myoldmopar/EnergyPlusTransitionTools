@@ -58,7 +58,7 @@ class TestResolveInputPaths(unittest.TestCase):
     def test_lst_file_absolute_paths(self) -> None:
         with TemporaryDirectory() as tmp:
             lst_dir = Path(tmp)
-            abs_path = Path("/absolute/path/file.idf")
+            abs_path = (lst_dir / "other_dir" / "file.idf").resolve()
             lst_file = lst_dir / "files.lst"
             lst_file.write_text(str(abs_path) + "\n")
             result = resolve_input_paths([lst_file])

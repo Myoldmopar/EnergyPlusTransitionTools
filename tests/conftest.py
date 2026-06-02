@@ -1,4 +1,5 @@
 import stat
+import sys
 import textwrap
 from collections.abc import Generator
 from pathlib import Path
@@ -56,9 +57,16 @@ FAKE_TRANSITION_SCRIPT = textwrap.dedent(
 
 
 def _make_fake_transition_binary(transition_dir: Path, source_ver: str, target_ver: str) -> TransitionBinary:
-    binary_path = transition_dir / f"Transition-V{source_ver}-to-V{target_ver}"
-    binary_path.write_text(FAKE_TRANSITION_SCRIPT)
-    binary_path.chmod(binary_path.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
+    base_name = f"Transition-V{source_ver}-to-V{target_ver}"
+    if sys.platform == "win32":
+        py_path = transition_dir / f"{base_name}.py"
+        py_path.write_text(FAKE_TRANSITION_SCRIPT.replace("#!/usr/bin/env python3\n", ""))
+        binary_path = transition_dir / f"{base_name}.bat"
+        binary_path.write_text(f'@echo off\n"{sys.executable}" "{py_path}" %*\n')
+    else:
+        binary_path = transition_dir / base_name
+        binary_path.write_text(FAKE_TRANSITION_SCRIPT)
+        binary_path.chmod(binary_path.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
     tb = TransitionBinary(full_path=binary_path)
     tb.source_version_idd_path.write_text(f"V{source_ver}-Energy+.idd")
     tb.target_version_idd_path.write_text(f"V{target_ver}-Energy+.idd")
