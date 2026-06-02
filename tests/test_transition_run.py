@@ -8,7 +8,7 @@ from energyplus_transition.energyplus_path import EnergyPlusPath
 from energyplus_transition.input_files import get_idf_version
 from energyplus_transition.international import Language, set_language
 from energyplus_transition.transition_binary import TransitionBinary
-from energyplus_transition.transition_run_thread import TransitionRun
+from energyplus_transition.transition_run import TransitionRun
 
 
 @pytest.fixture(autouse=True)
@@ -145,7 +145,7 @@ def test_cancelled_mid_transition(fake_eplus_install: Callable[[list[tuple[str, 
             done_callback=lambda m: done_calls.append(m),
         )
         with patch(
-            "energyplus_transition.transition_run_thread.subprocess.Popen", return_value=_make_mock_run(t, cancel=True)
+            "energyplus_transition.transition_run.subprocess.Popen", return_value=_make_mock_run(t, cancel=True)
         ):
             t.run()
         assert t.cancelled
@@ -167,7 +167,7 @@ def test_failed_transition(fake_eplus_install: Callable[[list[tuple[str, str]]],
             done_callback=lambda m: done_calls.append(m),
         )
         with patch(
-            "energyplus_transition.transition_run_thread.subprocess.Popen", return_value=_make_mock_run(t, returncode=1)
+            "energyplus_transition.transition_run.subprocess.Popen", return_value=_make_mock_run(t, returncode=1)
         ):
             t.run()
         assert "Failed" in done_calls[0]

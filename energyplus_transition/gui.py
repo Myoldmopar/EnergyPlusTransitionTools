@@ -20,7 +20,7 @@ from plan_tools.runtime import fixup_taskbar_icon_on_windows  # type: ignore
 from energyplus_transition import NAME, VERSION
 from energyplus_transition.energyplus_path import EnergyPlusPath
 from energyplus_transition.input_files import get_selected_input_files, InputFile
-from energyplus_transition.transition_run_thread import TransitionRun
+from energyplus_transition.transition_run import TransitionRun
 from energyplus_transition.international import translate as _, Language, set_language
 
 

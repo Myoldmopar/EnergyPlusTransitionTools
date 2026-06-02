@@ -9,7 +9,7 @@ from energyplus_transition.input_files import (
     cleanup_transition_artifacts,
     get_selected_input_files,
 )
-from energyplus_transition.transition_run_thread import TransitionRun
+from energyplus_transition.transition_run import TransitionRun
 
 try:
     from tqdm import tqdm
