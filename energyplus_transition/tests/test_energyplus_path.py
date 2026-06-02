@@ -20,13 +20,13 @@ class TestEnergyPlusPath(unittest.TestCase):
 
     def test_parse_version(self) -> None:
         valid = Path("/Applications/EnergyPlus-8-5-0")
-        version, _ = EnergyPlusPath.parse_version(valid, mute=True)
+        version, _ = EnergyPlusPath.parse_version(path=valid, mute=True)
         self.assertEqual(8.5, version)
         invalid_no_dashes = Path("/Applications/EnergyPlus-TestBuild")
-        version, _ = EnergyPlusPath.parse_version(invalid_no_dashes, mute=True)
+        version, _ = EnergyPlusPath.parse_version(path=invalid_no_dashes, mute=True)
         self.assertIsNone(version)
         invalid_with_dashes = Path("/Applications/EnergyPlus-Test-Build-1")
-        version, _ = EnergyPlusPath.parse_version(invalid_with_dashes, mute=True)
+        version, _ = EnergyPlusPath.parse_version(path=invalid_with_dashes, mute=True)
         self.assertIsNone(version)
 
 #     def test_proper_path_no_trailing_slash(self) -> None:

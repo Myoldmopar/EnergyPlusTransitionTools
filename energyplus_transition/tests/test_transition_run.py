@@ -21,7 +21,7 @@ class Test(TestCase):
 
         p = "/Applications/EnergyPlus-25-1-0/PreProcess/IDFVersionUpdater/Transition-V24-2-0-to-V25-1-0"
         tb = TransitionBinary(Path(p))
-        t.backup_file_before_transition(tb, temp_file)
+        t.backup_file_before_transition(transition_instance=tb, input_file=temp_file)
         t.run()
         self.assertFalse(t.cancelled)
         t.stop()

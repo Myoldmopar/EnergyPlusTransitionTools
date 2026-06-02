@@ -85,7 +85,7 @@ class EnergyPlusPath(object):
         if len(eplus_install_dirs) == 0:  # pragma: no cover
             return None
         return max(
-            (EnergyPlusPath.parse_version(p) for p in eplus_install_dirs),
+            (EnergyPlusPath.parse_version(path=p) for p in eplus_install_dirs),
             key=lambda x: x[0] if x[0] is not None else -1,
             default=(None, None)
         )[1]  # pragma: no cover

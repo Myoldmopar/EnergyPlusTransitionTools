@@ -135,7 +135,7 @@ class VersionUpdaterWindow(Tk):
         self.selected_input_files: list[tuple[Path, float | None]] = []
 
         # try to load the settings very early since it includes initialization
-        set_language(self.conf.settings[Configuration.Keys.language])
+        set_language(lang=self.conf.settings[Configuration.Keys.language])
 
         # connect signals for the GUI
         self.protocol('WM_DELETE_WINDOW', self._close_form)
@@ -199,15 +199,18 @@ class VersionUpdaterWindow(Tk):
         menu_bar = Menu(self)
         menu_file = Menu(menu_bar, tearoff=False)
         menu_file.add_command(
-            label="Change language to English", command=lambda: self._on_press_change_language(Language.English)
+            label="Change language to English",
+            command=lambda: self._on_press_change_language(new_language=Language.English)
         )
         # noinspection SpellCheckingInspection
         menu_file.add_command(
-            label="Cambiar idioma a español", command=lambda: self._on_press_change_language(Language.Spanish)
+            label="Cambiar idioma a español",
+            command=lambda: self._on_press_change_language(new_language=Language.Spanish)
         )
         # noinspection SpellCheckingInspection
         menu_file.add_command(
-            label="Changer la langue en français", command=lambda: self._on_press_change_language(Language.French)
+            label="Changer la langue en français",
+            command=lambda: self._on_press_change_language(new_language=Language.French)
         )
         menu_file.add_separator()
         menu_file.add_checkbutton(
@@ -303,10 +306,10 @@ class VersionUpdaterWindow(Tk):
             self.button_select_eplus_dir['state'] = ACTIVE
             self.button_select_idf['state'] = ACTIVE
             if self.eplus_install.valid_install and self.selected_input_files:
-                self.on_msg(_("Files selected, ready to go"))
+                self.on_msg(message=_("Files selected, ready to go"))
                 self.button_update_file['state'] = ACTIVE
             else:
-                self.on_msg(_("No files selected; cannot transition"))
+                self.on_msg(message=_("No files selected; cannot transition"))
                 self.button_update_file['state'] = DISABLED
 
     def _refresh_for_new_eplus_install(self) -> None:
@@ -388,7 +391,7 @@ class VersionUpdaterWindow(Tk):
             else:
                 file_paths.append(cur_input_path)
         self.selected_input_files = [
-            (p, self.get_idf_version(p)) for p in file_paths if p.is_file()
+            (p, self.get_idf_version(path_to_idf=p)) for p in file_paths if p.is_file()
         ]
         self._populate_files_table()
         self._refresh_gui_state()
@@ -401,7 +404,7 @@ class VersionUpdaterWindow(Tk):
             if v is not None and v in available_versions
         }
         if len(file_paths_and_versions_to_convert) < len(self.selected_input_files):
-            self.on_msg(_("Cannot find a matching transition tool for one or more IDF versions"))
+            self.on_msg(message=_("Cannot find a matching transition tool for one or more IDF versions"))
         # we need to build up the list of transition steps to perform
         self._tk_var_progress.set(0)
         num_total_transitions = 0
@@ -453,13 +456,13 @@ class VersionUpdaterWindow(Tk):
         self._tk_var_progress.set(self._tk_var_progress.get() + 1)
 
     def callback_on_msg(self, message: str) -> None:
-        self._gui_queue.put(lambda: self.on_msg(message))
+        self._gui_queue.put(lambda: self.on_msg(message=message))
 
     def on_msg(self, message: str) -> None:
         self._tk_var_status.set(message)
 
     def callback_on_done(self, message: str) -> None:
-        self._gui_queue.put(lambda: self.on_done(message))
+        self._gui_queue.put(lambda: self.on_done(message=message))
 
     def on_done(self, message: str) -> None:
         self._tk_var_status.set(message)

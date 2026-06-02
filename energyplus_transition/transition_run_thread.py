@@ -60,12 +60,12 @@ class TransitionRun:
         failed = False
         file = self.input_file
         # this whole function is going to require actually running subprocesses and such, I'm not covering it for now
-        with prepare_transition_directory(self.transition_list) as run_dir:  # pragma: no cover
+        with prepare_transition_directory(transitions=self.transition_list) as run_dir:  # pragma: no cover
             audit_file_accumulated = ""
             for tr in self.transition_list:
                 audit_file_accumulated += f"\n *** TRANSITION AUDIT: {tr.source_version} -> {tr.target_version} ***\n"
                 if self.keep_old:
-                    backup_success = self.backup_file_before_transition(tr, file)
+                    backup_success = self.backup_file_before_transition(transition_instance=tr, input_file=file)
                     if not backup_success:
                         failed = True
                         break
