@@ -23,7 +23,8 @@ class TransitionRun:
 
     def __init__(self, input_file: Path, transition_list: list[TransitionBinary],
                  keep_old: bool, increment_callback: Callable,
-                 msg_callback: Callable, done_callback: Callable):
+                 msg_callback: Callable, done_callback: Callable,
+                 started_callback: Callable[[], None] | None = None) -> None:
         self.p: subprocess.Popen[bytes] | None = None
         self.std_out: bytes | None = None
         self.std_err: bytes | None = None
@@ -34,6 +35,7 @@ class TransitionRun:
         self.msg_callback = msg_callback
         self.done_callback = done_callback
         self.cancelled = False
+        self.started_callback = started_callback or (lambda: None)
 
     @staticmethod
     def backup_file_before_transition(transition_instance: TransitionBinary, input_file: Path) -> bool:
@@ -56,6 +58,7 @@ class TransitionRun:
         Intermittently calls msg_callback to alert the calling thread of status updates.
         When complete, calls done_callback to alert the calling thread.
         """
+        self.started_callback()
         self.cancelled = False
         failed = False
         file = self.input_file
