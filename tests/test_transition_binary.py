@@ -1,7 +1,21 @@
-from pathlib import Path
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
-from energyplus_transition.transition_binary import TransitionBinary
+from energyplus_transition.transition_binary import TransitionBinary, prepare_transition_directory
+
+
+def fake_having_transition_binary(base_path: Path, source_version: str, target_version: str) -> TransitionBinary:
+    """Create a helper TransitionBinary object with the expected support files in place.
+
+    :param source_version: The source version string, in the form '8-6-0'
+    :param target_version: The target version string, in the form '8-7-0'
+    """
+    tb = TransitionBinary(full_path=base_path / f"Transition-V{source_version}-to-V{target_version}")
+    tb.source_version_idd_path.write_text(f"V{source_version}-Energy+.idd")
+    tb.target_version_idd_path.write_text(f"V{target_version}-Energy+.idd")
+    tb.report_variables_path.write_text(f"Report Variables {source_version} to {target_version}.csv")
+    return tb
 
 
 class TestTransitionBinary(unittest.TestCase):
@@ -39,3 +53,25 @@ class TestTransitionBinary(unittest.TestCase):
         invalid_path = "/Applications/EnergyPlus-8-5-0/PreProcess/IDFVersionUpdater/BadBinaryName"
         with self.assertRaises(Exception):
             TransitionBinary(Path(invalid_path))
+
+    def test_repr(self) -> None:
+        valid_path = Path("/Applications/EnergyPlus-8-5-0/PreProcess/IDFVersionUpdater/Transition-V8-5-0-to-V8-6-0")
+        obj = TransitionBinary(valid_path)
+        self.assertIn("8.5", repr(obj))
+        self.assertIn("8.6", repr(obj))
+
+    def test_prepare_transition_directory(self) -> None:
+        with TemporaryDirectory() as tmp_dir:
+            idd_dir = Path(tmp_dir)
+
+            transitions = [
+                fake_having_transition_binary(base_path=idd_dir, source_version="8-5-0", target_version="8-6-0"),
+                fake_having_transition_binary(base_path=idd_dir, source_version="8-6-0", target_version="8-7-0"),
+            ]
+
+            with prepare_transition_directory(transitions=transitions) as run_dir:
+                self.assertTrue(run_dir.is_dir())
+                for tb in transitions:
+                    self.assertTrue((run_dir / tb.source_version_idd_path.name).exists())
+                    self.assertTrue((run_dir / tb.target_version_idd_path.name).exists())
+                    self.assertTrue((run_dir / tb.report_variables_path.name).exists())
