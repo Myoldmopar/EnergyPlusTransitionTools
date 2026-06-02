@@ -19,6 +19,7 @@ from plan_tools.runtime import fixup_taskbar_icon_on_windows  # type: ignore
 
 from energyplus_transition import NAME, VERSION
 from energyplus_transition.energyplus_path import EnergyPlusPath
+from energyplus_transition.input_files import get_selected_input_files, InputFile
 from energyplus_transition.transition_run_thread import TransitionRun
 from energyplus_transition.international import translate as _, Language, set_language
 
@@ -132,7 +133,7 @@ class VersionUpdaterWindow(Tk):
         self.running_transition_threads: list[TransitionRun] = []
         self._executor: ThreadPoolExecutor | None = None
         self._threads_remaining = 0
-        self.selected_input_files: list[tuple[Path, float | None]] = []
+        self.selected_input_files: list[InputFile] = []
 
         # try to load the settings very early since it includes initialization
         set_language(lang=self.conf.settings[Configuration.Keys.language])
@@ -290,9 +291,9 @@ class VersionUpdaterWindow(Tk):
     def _populate_files_table(self) -> None:
         for row in self.tree_selected_files.get_children():
             self.tree_selected_files.delete(row)
-        for path, version in self.selected_input_files:
-            version_str = str(version) if version is not None else _("Unknown")
-            self.tree_selected_files.insert("", "end", values=(str(path), version_str))
+        for input_file in self.selected_input_files:
+            version_str = str(input_file.version) if input_file.version is not None else _("Unknown")
+            self.tree_selected_files.insert("", "end", values=(str(input_file.path), version_str))
 
     def _refresh_gui_state(self) -> None:
         """Set the GUI state based on IDF selection and background thread running."""
@@ -359,7 +360,7 @@ class VersionUpdaterWindow(Tk):
                 open_cmd = "open"
             else:  # assuming windows  platform.startswith("win32"):
                 open_cmd = "explorer"
-            subprocess.Popen([open_cmd, self.selected_input_files[0][0].parent], shell=False)
+            subprocess.Popen([open_cmd, self.selected_input_files[0].path.parent], shell=False)
         except Exception as e:
             messagebox.showerror(_("Could not open run directory") + str(e))
 
@@ -378,21 +379,10 @@ class VersionUpdaterWindow(Tk):
         if not cur_input_files:
             return
         self.conf.settings[Configuration.Keys.last_input_file_directory] = str(Path(cur_input_files[0]).parent)
-        file_paths: list[Path] = []
-        for cur_input_file in cur_input_files:
-            cur_input_path = Path(cur_input_file)
-            if cur_input_path.suffix == '.lst':
-                lst_dir = cur_input_path.parent
-                file_paths.extend(
-                    (lst_dir / p) if not (p := Path(line.strip())).is_absolute() else p
-                    for line in cur_input_path.read_text().splitlines()
-                    if line.strip()
-                )
-            else:
-                file_paths.append(cur_input_path)
-        self.selected_input_files = [
-            (p, self.get_idf_version(path_to_idf=p)) for p in file_paths if p.is_file()
-        ]
+        self.selected_input_files = get_selected_input_files(
+            input_paths=[Path(p) for p in cur_input_files],
+            on_msg=self.on_msg
+        )
         self._populate_files_table()
         self._refresh_gui_state()
 
@@ -400,8 +390,8 @@ class VersionUpdaterWindow(Tk):
         """Run Transition by building the list of transitions, creating thread instances, and executing them."""
         available_versions = {tr.source_version for tr in self.eplus_install.transitions_available}
         file_paths_and_versions_to_convert: dict[Path, float] = {
-            p: v for p, v in self.selected_input_files
-            if v is not None and v in available_versions
+            p.path: p.version for p in self.selected_input_files
+            if p.version is not None and p.version in available_versions
         }
         if len(file_paths_and_versions_to_convert) < len(self.selected_input_files):
             self.on_msg(message=_("Cannot find a matching transition tool for one or more IDF versions"))
@@ -471,48 +461,5 @@ class VersionUpdaterWindow(Tk):
             self._tk_var_progress.set(self._progress['maximum'])
             self.update_running = False
             self._refresh_gui_state()
-
-    # endregion
-
-    # region utility functions
-
-    @staticmethod
-    def get_idf_version(path_to_idf: Path) -> float | None:
-        """Return the current version of a given input file.
-
-        Uses a simplified parsing approach; only works for valid syntax files with no specialized error handling.
-
-        :param path_to_idf: Absolute path to a EnergyPlus input file
-        :rtype: A floating point version number for the input file, for example 8.5 for an 8.5.0 input file
-        """
-        # phase 1: read in lines of file
-        lines = path_to_idf.read_text(errors='ignore').split('\n')
-        # phases 2: remove comments and blank lines
-        lines_a = []
-        for line in lines:
-            line_text = line.strip()
-            this_line = ""
-            if len(line_text) > 0:
-                exclamation = line_text.find("!")
-                if exclamation == -1:
-                    this_line = line_text
-                elif exclamation == 0:
-                    this_line = ""
-                elif exclamation > 0:
-                    this_line = line_text[:exclamation]
-                if not this_line == "":
-                    lines_a.append(this_line)
-        # phase 3: join entire array and re-split by semicolon
-        idf_data_joined = ''.join(lines_a)
-        idf_object_strings = idf_data_joined.split(";")
-        # phase 4: break each object into an array of object name and field values
-        for this_object in idf_object_strings:
-            tokens = this_object.split(',')
-            if tokens[0].upper() == "VERSION":
-                version_string = tokens[1]
-                version_string_tokens = version_string.split('.')  # might be 2 or 3...
-                version_number = float("%s.%s" % (version_string_tokens[0], version_string_tokens[1]))
-                return version_number
-        return None
 
     # endregion
