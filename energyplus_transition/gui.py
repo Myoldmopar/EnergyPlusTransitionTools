@@ -7,7 +7,6 @@ from pathlib import Path
 from platform import system
 import subprocess
 from sys import platform
-from typing import Optional
 
 from tkinter import (
     Tk, StringVar, messagebox, Menu, Button, Frame, LabelFrame, SUNKEN, S, EW, Label, BooleanVar,
@@ -85,8 +84,10 @@ class Configuration:
 
 
 class VersionUpdaterWindow(Tk):
-    """ The main window, or Tk(), for the IDFVersionUpdater program.
-    This initializer function creates instance variables, sets up threading, and builds the GUI"""
+    """The main window, or Tk(), for the IDFVersionUpdater program.
+
+    Creates instance variables, sets up threading, and builds the GUI.
+    """
 
     # region class construction and basic event/closing functions
 
@@ -160,7 +161,7 @@ class VersionUpdaterWindow(Tk):
             self.destroy()
 
     def _check_queue(self):
-        """Checks the GUI queue for actions and sets a timer to check again each time"""
+        """Check the GUI queue for actions and set a timer to check again each time."""
         while True:
             # noinspection PyBroadException
             try:
@@ -192,9 +193,7 @@ class VersionUpdaterWindow(Tk):
         self._tk_var_eplus_dir.trace('w', trace_eplus_dir)
 
     def _build_gui(self):
-        """
-        This function manages the window construction, including position, title, and presentation
-        """
+        """Manage window construction, including position, title, and presentation."""
         menu_bar = Menu(self)
         menu_file = Menu(menu_bar, tearoff=False)
         menu_file.add_command(
@@ -291,7 +290,7 @@ class VersionUpdaterWindow(Tk):
             self.tree_selected_files.insert("", "end", values=(str(path), version_str))
 
     def _refresh_gui_state(self):
-        """This function sets the state of the GUI based on IDF selection and background thread running"""
+        """Set the GUI state based on IDF selection and background thread running."""
         if self.update_running:
             self.button_select_eplus_dir['state'] = DISABLED
             self.button_select_idf['state'] = DISABLED
@@ -328,9 +327,9 @@ class VersionUpdaterWindow(Tk):
         self._refresh_for_new_eplus_install()
 
     def _on_press_change_language(self, new_language: str):
-        """
-        This function handles the request to change languages, where the language identifier is passed in with the event
-        an item in the :py:class:`Languages <International.Languages>` enumeration class
+        """Handle a request to change languages.
+
+        The language identifier is a :py:class:`Languages <International.Languages>` enumeration value.
         """
         self.conf.settings[Configuration.Keys.language] = new_language
         response = messagebox.askyesnocancel(
@@ -345,9 +344,7 @@ class VersionUpdaterWindow(Tk):
             self.destroy()
 
     def _on_press_open_input_dir(self):
-        """
-        This function handles the request to open the current input file directory in the default application
-        """
+        """Open the current input file directory in the default application."""
         if not self.selected_input_files:
             return
         try:
@@ -362,9 +359,7 @@ class VersionUpdaterWindow(Tk):
             messagebox.showerror(_("Could not open run directory") + str(e))
 
     def _on_press_choose_input_file(self):
-        """
-        This function handles the request to choose a new input, opening a dialog, and updating settings if applicable
-        """
+        """Choose a new input file via a dialog and update settings if applicable."""
         cur_folder = self.conf.settings[Configuration.Keys.last_input_file_directory]
         cur_input_files = filedialog.askopenfilenames(
             title=_("Open File for Transition"),
@@ -397,10 +392,7 @@ class VersionUpdaterWindow(Tk):
         self._refresh_gui_state()
 
     def _on_press_update_idf(self) -> None:
-        """
-        This function handles the request to run Transition itself, building up the list of transitions,
-        creating a new thread instance, prepping the gui, and running it
-        """
+        """Run Transition by building the list of transitions, creating thread instances, and executing them."""
         available_versions = {tr.source_version for tr in self.eplus_install.transitions_available}
         file_paths_and_versions_to_convert: dict[Path, float] = {
             p: v for p, v in self.selected_input_files
@@ -476,10 +468,9 @@ class VersionUpdaterWindow(Tk):
 
     @staticmethod
     def get_idf_version(path_to_idf: Path):
-        """
-        This function returns the current version of a given input file.
-        The function uses a simplified parsing approach, so it only works for valid syntax files,
-        and provides no specialized error handling
+        """Return the current version of a given input file.
+
+        Uses a simplified parsing approach; only works for valid syntax files with no specialized error handling.
 
         :param path_to_idf: Absolute path to a EnergyPlus input file
         :rtype: A floating point version number for the input file, for example 8.5 for an 8.5.0 input file

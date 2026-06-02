@@ -1,7 +1,6 @@
 class Language:
-    """
-    This class is a simple enumeration container for the different languages implemented
-    """
+    """Simple enumeration container for the different languages implemented."""
+
     English = 'en'
     Spanish = 'sp'
     French = 'fr'
@@ -166,8 +165,8 @@ FrenchDictionary: dict[str, str] = {
 
 
 def set_language(lang):
-    """
-    This is the interface for changing the language, call this, save settings, then restart the program
+    """Change the language; save settings then restart the program.
+
     :param lang: A language identifier from the :py:class:`Languages` enumeration class
     """
     global CurrentLanguage
@@ -175,10 +174,9 @@ def set_language(lang):
 
 
 def report_missing_keys(mute: bool = False) -> bool:
-    """
-    This function simply scans dictionaries to see if any keys are missing from them compared to a baseline.
-    The baseline is currently the English dictionary.
-    This function simply reports to the terminal.
+    """Scan dictionaries for keys missing compared to the English baseline and report to terminal.
+
+    The baseline is the English dictionary.
     """
     base_keys = EnglishDictionary.keys()
     known_dictionaries = {
@@ -198,8 +196,7 @@ def report_missing_keys(mute: bool = False) -> bool:
 
 
 def translate(key, mute: bool = False):
-    """
-    This function translates a string into a dictionary.
+    """Translate a string using the current language dictionary.
 
     :param key: The string to translate
     :param mute: A unit test override to hush output messaging.

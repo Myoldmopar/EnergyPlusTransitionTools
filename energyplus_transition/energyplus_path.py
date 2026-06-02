@@ -7,7 +7,7 @@ from energyplus_transition.transition_binary import TransitionBinary
 
 class EnergyPlusPath(object):
     """
-    This class provides some meaningful variables about an EnergyPlus install tree
+    Provide some meaningful variables about an EnergyPlus install tree.
 
     :ivar install_root: An installation path object, as in /Applications/EnergyPlus-9-6-0/
         optionally you can also point to a local Products/(Release/) directory where energyplus.exe exists

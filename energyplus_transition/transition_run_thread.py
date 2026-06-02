@@ -9,7 +9,7 @@ from energyplus_transition.transition_binary import TransitionBinary, prepare_tr
 
 class TransitionRun:
     """
-    This class allows easily running a series of EnergyPlus Transition program versions in a separate thread
+    Allow easily running a series of EnergyPlus Transition program versions in a separate thread.
 
     :param input_file: The IDF/IMF file to transition
     :param transition_list: Ordered list of :py:class:`TransitionBinary` steps to apply to the file
@@ -51,11 +51,10 @@ class TransitionRun:
         return True
 
     def run(self):
-        """
-        This function runs the instantiated thread based on the parameters passed into the constructor.
-        The function intermittently calls the msg_callback class instance function variable to alert the calling thread
-        of status updates.  When the function is complete it calls the done_callback class instance function variable to
-        alert the calling thread.
+        """Run the transition thread based on the parameters passed into the constructor.
+
+        Intermittently calls msg_callback to alert the calling thread of status updates.
+        When complete, calls done_callback to alert the calling thread.
         """
         self.cancelled = False
         failed = False
@@ -111,6 +110,6 @@ class TransitionRun:
             self.done_callback(_("All transitions completed successfully - Open run directory for transitioned file"))
 
     def stop(self):
-        """Sets the cancelled flag to attempt to kill the transition at the next step"""
+        """Set the cancelled flag to attempt to kill the transition at the next step."""
         self.msg_callback(_("Attempting to cancel simulation ..."))
         self.cancelled = True

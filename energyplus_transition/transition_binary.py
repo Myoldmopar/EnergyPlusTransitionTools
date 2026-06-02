@@ -6,9 +6,9 @@ import tempfile
 
 class TransitionBinary(object):
     """
-    This class describes a single transition binary in the installation
-    The class is constructed from the full path to the binary, then source and target versions are parsed from this path
-    and the filenames
+    Describe a single transition binary in the installation.
+
+    Constructed from the full path to the binary; source and target versions are parsed from the path and filenames.
 
     :param full_path: Full path object to the transition binary itself
 
