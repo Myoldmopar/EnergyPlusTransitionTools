@@ -1,21 +1,18 @@
 from pathlib import Path
-from shutil import copy
-from tempfile import mkdtemp, mktemp
+from tempfile import mktemp
 from unittest import TestCase
 
 from energyplus_transition.transition_binary import TransitionBinary
-from energyplus_transition.transition_run_thread import TransitionRunThread
+from energyplus_transition.transition_run_thread import TransitionRun
 
 
 class Test(TestCase):
     def test_thread(self):
         temp_file = Path(mktemp())
         temp_file.write_text("Hello")
-        temp_run_dir = Path(mkdtemp())
-        copy(temp_file, temp_run_dir)
-        t = TransitionRunThread(
-            transitions_to_run={},
-            working_directory=temp_run_dir,
+        t = TransitionRun(
+            input_file=temp_file,
+            transition_list=[],
             keep_old=False,
             increment_callback=lambda x: x,
             msg_callback=lambda x: x,
