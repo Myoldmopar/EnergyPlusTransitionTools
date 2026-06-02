@@ -3,7 +3,12 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from energyplus_transition.input_files import get_idf_version, get_selected_input_files, resolve_input_paths
+from energyplus_transition.input_files import (
+    cleanup_transition_artifacts,
+    get_idf_version,
+    get_selected_input_files,
+    resolve_input_paths,
+)
 
 
 class TestGetIDFVersion(unittest.TestCase):
@@ -86,3 +91,23 @@ class TestGetSelectedInputFiles(unittest.TestCase):
         self.assertEqual(result, [])
         self.assertEqual(len(messages), 1)
         self.assertIn("not found", messages[0])
+
+
+class TestCleanupTransitionArtifacts(unittest.TestCase):
+    def test_removes_artifacts(self) -> None:
+        with TemporaryDirectory() as tmp:
+            idf = Path(tmp) / "test.idf"
+            idf.write_text("Version,24.1;")
+            for suffix in (".idfnew", ".idfold", ".imfnew", ".imfold", ".rvinew", ".rviold"):
+                idf.with_suffix(suffix).write_text("artifact")
+            cleanup_transition_artifacts(idf)
+            for suffix in (".idfnew", ".idfold", ".imfnew", ".imfold", ".rvinew", ".rviold"):
+                self.assertFalse(idf.with_suffix(suffix).exists())
+            self.assertTrue(idf.exists())
+
+    def test_no_artifacts_present(self) -> None:
+        with TemporaryDirectory() as tmp:
+            idf = Path(tmp) / "test.idf"
+            idf.write_text("Version,24.1;")
+            cleanup_transition_artifacts(idf)  # should not raise
+            self.assertTrue(idf.exists())
