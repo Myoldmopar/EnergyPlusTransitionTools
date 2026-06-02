@@ -1,8 +1,8 @@
-def main_cli():
+def main_cli() -> None:
     pass
 
 
-def main_gui(called_from_ep_cli: bool = False):
+def main_gui(called_from_ep_cli: bool = False) -> None:
     from energyplus_transition.gui import VersionUpdaterWindow
 
     # we will keep the form in a loop to handle requested restarts (language change, etc.)

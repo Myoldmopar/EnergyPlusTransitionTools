@@ -7,7 +7,7 @@ from energyplus_transition.transition_binary import TransitionBinary
 
 class EnergyPlusPath(object):
     """
-    This class provides some meaningful variables about an EnergyPlus install tree
+    Provide some meaningful variables about an EnergyPlus install tree.
 
     :ivar install_root: An installation path object, as in /Applications/EnergyPlus-9-6-0/
         optionally you can also point to a local Products/(Release/) directory where energyplus.exe exists
@@ -17,7 +17,7 @@ class EnergyPlusPath(object):
         instances available in this installation
     """
 
-    def __init__(self, install_root: str):
+    def __init__(self, install_root: Path):
         self.install_root = Path(install_root)
         # initialize values assuming it is broken
         self.valid_install = False
@@ -27,7 +27,7 @@ class EnergyPlusPath(object):
 
         self.__configure()
 
-    def __configure(self):  # pragma: no cover
+    def __configure(self) -> None:  # pragma: no cover
         # we aren't covering this with tests because we'd have to install E+ on CI
         if not self.install_root.exists():
             return
@@ -42,7 +42,7 @@ class EnergyPlusPath(object):
             self.transition_directory = self.install_root
 
         binary_paths = list(self.transition_directory.glob('Transition-V*'))
-        self.transitions_available = [TransitionBinary(x) for x in binary_paths]
+        self.transitions_available = [tb for x in binary_paths if (tb := TransitionBinary(x)).has_support_files()]
         self.transitions_available.sort(key=lambda tb: tb.source_version)
         try:
             string_version_output = check_output([str(energyplus_exe), '-v'], text=True, encoding='utf-8')
@@ -55,7 +55,7 @@ class EnergyPlusPath(object):
 
     @staticmethod
     def parse_version(path: Path, mute: bool = False) -> tuple[Optional[float], Optional[Path]]:
-        just_version_suffix = path.name[10:]
+        just_version_suffix = path.name[10:]  # strip off "EnergyPlus"
         if just_version_suffix.startswith(('V', '-')):
             just_version_suffix = just_version_suffix[1:]
         version_tokens = just_version_suffix.split('-')
@@ -85,7 +85,7 @@ class EnergyPlusPath(object):
         if len(eplus_install_dirs) == 0:  # pragma: no cover
             return None
         return max(
-            (EnergyPlusPath.parse_version(p) for p in eplus_install_dirs),
+            (EnergyPlusPath.parse_version(path=p) for p in eplus_install_dirs),
             key=lambda x: x[0] if x[0] is not None else -1,
             default=(None, None)
         )[1]  # pragma: no cover

@@ -1,20 +1,18 @@
 from pathlib import Path
 import shutil
 import subprocess
-import threading
 from typing import Callable
 
 from energyplus_transition.international import translate as _
-from energyplus_transition.transition_binary import TransitionBinary
+from energyplus_transition.transition_binary import TransitionBinary, prepare_transition_directory
 
 
-class TransitionRunThread(threading.Thread):
+class TransitionRun:
     """
-    This class allows easily running a series of EnergyPlus Transition program versions in a separate thread
+    Allow easily running a series of EnergyPlus Transition program versions in a separate thread.
 
-    :param transitions_to_run: A dict of Path to list of matching
-                               :py:class:`TransitionBinary <TransitionBinary.TransitionBinary>` instances
-    :param working_directory: The transition working directory to run transitions in
+    :param input_file: The IDF/IMF file to transition
+    :param transition_list: Ordered list of :py:class:`TransitionBinary` steps to apply to the file
     :param keep_old: A flag for whether to keep an extra backup of the original file to be transitioned in the input dir
     :param msg_callback: A Python function to be called back by this thread when a message can be displayed
     :param done_callback: A Python function to be called back by this thread when the transition process is complete
@@ -23,21 +21,19 @@ class TransitionRunThread(threading.Thread):
     :ivar std_err: The standard error output from the transition process
     """
 
-    def __init__(self, transitions_to_run: dict[Path, list[TransitionBinary]],
-                 working_directory: Path,
+    def __init__(self, input_file: Path, transition_list: list[TransitionBinary],
                  keep_old: bool, increment_callback: Callable,
                  msg_callback: Callable, done_callback: Callable):
-        self.p = None
-        self.std_out = None
-        self.std_err = None
-        self.transitions = transitions_to_run
-        self.run_dir = working_directory
+        self.p: subprocess.Popen[bytes] | None = None
+        self.std_out: bytes | None = None
+        self.std_err: bytes | None = None
+        self.input_file = input_file
+        self.transition_list = transition_list
         self.keep_old = keep_old
         self.increment_callback = increment_callback
         self.msg_callback = msg_callback
         self.done_callback = done_callback
         self.cancelled = False
-        threading.Thread.__init__(self)
 
     @staticmethod
     def backup_file_before_transition(transition_instance: TransitionBinary, input_file: Path) -> bool:
@@ -54,29 +50,29 @@ class TransitionRunThread(threading.Thread):
             return False
         return True
 
-    def run(self):
-        """
-        This function runs the instantiated thread based on the parameters passed into the constructor.
-        The function intermittently calls the msg_callback class instance function variable to alert the calling thread
-        of status updates.  When the function is complete it calls the done_callback class instance function variable to
-        alert the calling thread.
+    def run(self) -> None:
+        """Run the transition thread based on the parameters passed into the constructor.
+
+        Intermittently calls msg_callback to alert the calling thread of status updates.
+        When complete, calls done_callback to alert the calling thread.
         """
         self.cancelled = False
         failed = False
-        # this whole loop is going to require actually running subprocesses and such, I'm not covering it for now
-        for file, transition_list in self.transitions.items():  # pragma: no cover
+        file = self.input_file
+        # this whole function is going to require actually running subprocesses and such, I'm not covering it for now
+        with prepare_transition_directory(transitions=self.transition_list) as run_dir:  # pragma: no cover
             audit_file_accumulated = ""
-            for tr in transition_list:
+            for tr in self.transition_list:
                 audit_file_accumulated += f"\n *** TRANSITION AUDIT: {tr.source_version} -> {tr.target_version} ***\n"
                 if self.keep_old:
-                    backup_success = self.backup_file_before_transition(tr, file)
+                    backup_success = self.backup_file_before_transition(transition_instance=tr, input_file=file)
                     if not backup_success:
                         failed = True
                         break
                 self.p = subprocess.Popen(
                     args=[tr.full_path_to_binary, str(file)],
                     shell=False,
-                    cwd=self.run_dir,
+                    cwd=run_dir,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE)
                 self.msg_callback(
@@ -88,7 +84,7 @@ class TransitionRunThread(threading.Thread):
                     self.msg_callback(_("Transition Cancelled"))
                     break
                 else:
-                    audit_file_path = self.run_dir / 'Transition.audit'
+                    audit_file_path = run_dir / 'Transition.audit'
                     if audit_file_path.exists():
                         audit_file_accumulated += audit_file_path.read_text()
                     if self.p.returncode == 0:
@@ -113,7 +109,7 @@ class TransitionRunThread(threading.Thread):
         else:
             self.done_callback(_("All transitions completed successfully - Open run directory for transitioned file"))
 
-    def stop(self):
-        """Sets the cancelled flag to attempt to kill the transition at the next step"""
+    def stop(self) -> None:
+        """Set the cancelled flag to attempt to kill the transition at the next step."""
         self.msg_callback(_("Attempting to cancel simulation ..."))
         self.cancelled = True

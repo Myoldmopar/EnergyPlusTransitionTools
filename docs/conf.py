@@ -21,7 +21,7 @@ from pathlib import Path
 package_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(package_root))
 
-from energyplus_transition import NAME, VERSION
+from energyplus_transition import NAME, VERSION  # noqa: E402
 
 # -- General configuration ------------------------------------------------
 
@@ -208,7 +208,7 @@ htmlhelp_basename = 'EnergyPlusTransitionToolsDoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
-latex_elements = {
+latex_elements: dict[str, str] = {
     # The paper size ('letterpaper' or 'a4paper').
     # 'papersize': 'letterpaper',
 
