@@ -17,7 +17,7 @@ class EnergyPlusPath(object):
         instances available in this installation
     """
 
-    def __init__(self, install_root: str):
+    def __init__(self, install_root: Path):
         self.install_root = Path(install_root)
         # initialize values assuming it is broken
         self.valid_install = False

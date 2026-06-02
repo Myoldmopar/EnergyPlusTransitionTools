@@ -10,7 +10,7 @@ from energyplus_transition.energyplus_path import EnergyPlusPath
 
 class TestEnergyPlusPath(unittest.TestCase):
     def test_basic_invalid_path(self) -> None:
-        ep = EnergyPlusPath("")
+        ep = EnergyPlusPath(install_root=Path(""))
         self.assertFalse(ep.valid_install)
         self.assertIsInstance(str(ep), str)
 

@@ -313,7 +313,7 @@ class VersionUpdaterWindow(Tk):
                 self.button_update_file['state'] = DISABLED
 
     def _refresh_for_new_eplus_install(self) -> None:
-        self.eplus_install = EnergyPlusPath(self._tk_var_eplus_dir.get())
+        self.eplus_install = EnergyPlusPath(install_root=Path(self._tk_var_eplus_dir.get()))
         if self.eplus_install.valid_install:
             self._tk_var_eplus_version.set(f"{_('EnergyPlus Version')}: {self.eplus_install.version}")
         else:

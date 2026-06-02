@@ -1,9 +1,9 @@
 class Language:
     """Simple enumeration container for the different languages implemented."""
 
-    English = 'en'
-    Spanish = 'sp'
-    French = 'fr'
+    English: str = 'en'
+    Spanish: str = 'sp'
+    French: str = 'fr'
 
 
 # This variable is a global parameter to hold the language state for the running program

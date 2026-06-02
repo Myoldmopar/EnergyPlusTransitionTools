@@ -12,7 +12,7 @@ def test_missing_keys() -> None:
     (Language.Spanish, "Cerca"),
     (Language.French, "Fermer"),
 ])
-def test_translation(lang: Language, expected_close: str) -> None:
+def test_translation(lang: str, expected_close: str) -> None:
     set_language(lang=lang)
     assert translate(key=None) == ""  # type: ignore[arg-type]
     assert translate(key="") == ""
