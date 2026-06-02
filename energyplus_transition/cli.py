@@ -24,6 +24,10 @@ def get_parser() -> argparse.ArgumentParser:
         "-s", "--save-intermediate", action="store_true", help="Save intermediate versions during transitioning"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
+    parser.add_argument("-p", "--progress", action="store_true", help="Show a tqdm progress bar (requires tqdm)")
+    parser.add_argument(
+        "-j", "--jobs", type=int, default=None, metavar="N", help="Number of parallel workers (default: number of CPUs)"
+    )
     parser.add_argument(
         "-t",
         "--to-version",
@@ -37,8 +41,11 @@ def get_parser() -> argparse.ArgumentParser:
 
 
 class Runner:
-    def __init__(self, verbose: bool = False):
+    def __init__(self, verbose: bool = False, progress: bool = False, jobs: int | None = None):
         self.verbose = verbose
+        self.progress = progress
+        self.jobs = jobs if jobs is not None else cpu_count()
+        self.pbar = None
         # Number of Individual Transitions to run across all files, used for progress tracking
         self.progress_transitions = 0
         self.num_total_transitions = 0
@@ -49,6 +56,8 @@ class Runner:
 
     def on_increment(self) -> None:
         self.progress_transitions += 1
+        if self.pbar is not None:
+            self.pbar.update(1)
 
     def on_msg(self, message: str) -> None:
         if self.verbose:
@@ -96,11 +105,27 @@ class Runner:
             )
 
     def execute(self) -> None:
-        executor = ThreadPoolExecutor(max_workers=cpu_count())
-        futures = [executor.submit(run.run) for run in self.runs]
-        executor.shutdown(wait=True)
-        for future in futures:
-            future.result()  # re-raise any exceptions
+        print(
+            f"Starting transitions with {self.jobs} parallel workers: "
+            f"{self.num_total_files} files, {self.num_total_transitions} transitions"
+        )
+        if self.progress:
+            try:
+                from tqdm import tqdm  # noqa: PLC0415
+            except ImportError:
+                print("Warning: --progress requires tqdm (`pip install tqdm`), continuing without progress bar.")
+            else:
+                self.pbar = tqdm(total=self.num_total_transitions)
+        try:
+            executor = ThreadPoolExecutor(max_workers=self.jobs)
+            futures = [executor.submit(run.run) for run in self.runs]
+            executor.shutdown(wait=True)
+            for future in futures:
+                future.result()  # re-raise any exceptions
+        finally:
+            if self.pbar is not None:
+                self.pbar.close()
+                self.pbar = None
 
 
 def main(args_: list[str] | None = None) -> None:
@@ -108,7 +133,7 @@ def main(args_: list[str] | None = None) -> None:
     parser = get_parser()
     args = parser.parse_args(args_)
 
-    runner = Runner(verbose=args.verbose)
+    runner = Runner(verbose=args.verbose, progress=args.progress, jobs=args.jobs)
 
     if args.eplus_dir:
         eplus_dir = args.eplus_dir
