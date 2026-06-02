@@ -78,6 +78,7 @@ def _make_fake_transition_binary(transition_dir: Path, source_ver: str, target_v
 @pytest.fixture
 def fake_eplus_install() -> Generator:
     tmp_dirs: list[TemporaryDirectory] = []
+    patches = []
 
     def _make(versions: list[tuple[str, str]]) -> EnergyPlusPath:
         tmp = TemporaryDirectory()
@@ -95,16 +96,19 @@ def fake_eplus_install() -> Generator:
             _make_fake_transition_binary(transition_dir, source_ver, target_ver)
 
         last_version = versions[-1][1].replace("-", ".")
-        with patch(
+        p = patch(
             "energyplus_transition.energyplus_path.check_output",
             return_value=f"EnergyPlus, Version {last_version}-abc123\n",
-        ):
-            eplus_install = EnergyPlusPath(install_root=install_dir)
+        )
+        p.start()
+        patches.append(p)
 
-        return eplus_install
+        return EnergyPlusPath(install_root=install_dir)
 
     yield _make
 
+    for p in patches:
+        p.stop()
     for tmp in tmp_dirs:
         tmp.cleanup()
 
