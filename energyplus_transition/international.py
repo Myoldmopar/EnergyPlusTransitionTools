@@ -164,7 +164,7 @@ FrenchDictionary: dict[str, str] = {
 }
 
 
-def set_language(lang):
+def set_language(lang: str) -> None:
     """Change the language; save settings then restart the program.
 
     :param lang: A language identifier from the :py:class:`Languages` enumeration class
@@ -195,7 +195,7 @@ def report_missing_keys(mute: bool = False) -> bool:
     return True if any_missing else False
 
 
-def translate(key, mute: bool = False):
+def translate(key: str, mute: bool = False) -> str:
     """Translate a string using the current language dictionary.
 
     :param key: The string to translate

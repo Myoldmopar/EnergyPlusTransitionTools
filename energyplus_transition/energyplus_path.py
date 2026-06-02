@@ -27,7 +27,7 @@ class EnergyPlusPath(object):
 
         self.__configure()
 
-    def __configure(self):  # pragma: no cover
+    def __configure(self) -> None:  # pragma: no cover
         # we aren't covering this with tests because we'd have to install E+ on CI
         if not self.install_root.exists():
             return

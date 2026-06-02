@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import Any
 from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import cpu_count
 from json import loads, dumps
@@ -76,7 +77,7 @@ class Configuration:
         if Configuration.Keys.keep_intermediate not in self.settings:
             self.settings[Configuration.Keys.keep_intermediate] = True
 
-    def save_settings(self):
+    def save_settings(self) -> None:
         try:
             self.settings_file.write_text(dumps(self.settings, indent=2))
         except Exception as e:
@@ -123,7 +124,7 @@ class VersionUpdaterWindow(Tk):
         self.conf = Configuration(called_from_ep_cli)
 
         # initialize some class-level "constants"
-        self.pad = {'padx': 3, 'pady': 3}
+        self.pad: dict[str, Any] = {'padx': 3, 'pady': 3}
 
         # reset the restart flag
         self.doing_restart = False
@@ -152,7 +153,7 @@ class VersionUpdaterWindow(Tk):
         # check the validity of the idf versions once at load time to initialize the action availability
         self._refresh_gui_state()
 
-    def _close_form(self):
+    def _close_form(self) -> None:
         # noinspection PyBroadException
         try:
             self.conf.save_settings()
@@ -161,7 +162,7 @@ class VersionUpdaterWindow(Tk):
         finally:
             self.destroy()
 
-    def _check_queue(self):
+    def _check_queue(self) -> None:
         """Check the GUI queue for actions and set a timer to check again each time."""
         while True:
             # noinspection PyBroadException
@@ -178,22 +179,22 @@ class VersionUpdaterWindow(Tk):
 
     # region GUI building variable/tracing
 
-    def _define_tk_variables(self):
+    def _define_tk_variables(self) -> None:
         self._tk_var_status = StringVar(value="<status>")
         self._tk_var_eplus_version = StringVar(value="<eplus_version>")
         self._tk_var_progress = IntVar(value=0)
 
-        def trace_intermediate(*_):
+        def trace_intermediate(*_: object) -> None:
             self.conf.settings[Configuration.Keys.keep_intermediate] = self._tk_var_keep_intermediate.get()
         self._tk_var_keep_intermediate = BooleanVar(value=self.conf.settings[Configuration.Keys.keep_intermediate])
         self._tk_var_keep_intermediate.trace('w', trace_intermediate)
 
-        def trace_eplus_dir(*_):
+        def trace_eplus_dir(*_: object) -> None:
             self.conf.settings[Configuration.Keys.eplus_dir] = self._tk_var_eplus_dir.get()
         self._tk_var_eplus_dir = StringVar(value=self.conf.settings[Configuration.Keys.eplus_dir])
         self._tk_var_eplus_dir.trace('w', trace_eplus_dir)
 
-    def _build_gui(self):
+    def _build_gui(self) -> None:
         """Manage window construction, including position, title, and presentation."""
         menu_bar = Menu(self)
         menu_file = Menu(menu_bar, tearoff=False)
@@ -258,15 +259,15 @@ class VersionUpdaterWindow(Tk):
         lf.grid(row=1, column=0, sticky=NSEW, **self.pad)
 
         # next row: the button row
-        lf = Frame(self)
-        self.button_open_run_dir = Button(lf, text=_('Open Directory'), command=self._on_press_open_input_dir)
+        button_frame = Frame(self)
+        self.button_open_run_dir = Button(button_frame, text=_('Open Directory'), command=self._on_press_open_input_dir)
         self.button_open_run_dir.grid(row=0, column=0, sticky=EW, **self.pad)
-        self.button_update_file = Button(lf, text=_('Run Transition'), command=self._on_press_update_idf)
+        self.button_update_file = Button(button_frame, text=_('Run Transition'), command=self._on_press_update_idf)
         self.button_update_file.grid(row=0, column=1, sticky=EW, **self.pad)
-        self.button_cancel = Button(lf, text=_('Cancel Run'), command=self._on_press_cancel)
+        self.button_cancel = Button(button_frame, text=_('Cancel Run'), command=self._on_press_cancel)
         self.button_cancel.grid(row=0, column=2, sticky=EW, **self.pad)
-        lf.grid_columnconfigure(ALL, weight=1)
-        lf.grid(row=2, column=0, sticky=EW, **self.pad)
+        button_frame.grid_columnconfigure(ALL, weight=1)
+        button_frame.grid(row=2, column=0, sticky=EW, **self.pad)
 
         # then the status bar
         status_frame = Frame(self)
@@ -283,14 +284,14 @@ class VersionUpdaterWindow(Tk):
         self.grid_rowconfigure(3, weight=0)
         self.grid_columnconfigure(ALL, weight=1)
 
-    def _populate_files_table(self):
+    def _populate_files_table(self) -> None:
         for row in self.tree_selected_files.get_children():
             self.tree_selected_files.delete(row)
         for path, version in self.selected_input_files:
             version_str = str(version) if version is not None else _("Unknown")
             self.tree_selected_files.insert("", "end", values=(str(path), version_str))
 
-    def _refresh_gui_state(self):
+    def _refresh_gui_state(self) -> None:
         """Set the GUI state based on IDF selection and background thread running."""
         if self.update_running:
             self.button_select_eplus_dir['state'] = DISABLED
@@ -308,7 +309,7 @@ class VersionUpdaterWindow(Tk):
                 self.on_msg(_("No files selected; cannot transition"))
                 self.button_update_file['state'] = DISABLED
 
-    def _refresh_for_new_eplus_install(self):
+    def _refresh_for_new_eplus_install(self) -> None:
         self.eplus_install = EnergyPlusPath(self._tk_var_eplus_dir.get())
         if self.eplus_install.valid_install:
             self._tk_var_eplus_version.set(f"{_('EnergyPlus Version')}: {self.eplus_install.version}")
@@ -320,14 +321,14 @@ class VersionUpdaterWindow(Tk):
 
     # region button press handlers
 
-    def _on_press_choose_eplus_dir(self):
+    def _on_press_choose_eplus_dir(self) -> None:
         new_eplus_dir = filedialog.askdirectory(title=_("Choose EnergyPlus Install Root"), mustexist=True)
         if not new_eplus_dir:
             return
         self._tk_var_eplus_dir.set(new_eplus_dir)
         self._refresh_for_new_eplus_install()
 
-    def _on_press_change_language(self, new_language: str):
+    def _on_press_change_language(self, new_language: str) -> None:
         """Handle a request to change languages.
 
         The language identifier is a :py:class:`Languages <International.Languages>` enumeration value.
@@ -344,7 +345,7 @@ class VersionUpdaterWindow(Tk):
             self.conf.save_settings()
             self.destroy()
 
-    def _on_press_open_input_dir(self):
+    def _on_press_open_input_dir(self) -> None:
         """Open the current input file directory in the default application."""
         if not self.selected_input_files:
             return
@@ -359,7 +360,7 @@ class VersionUpdaterWindow(Tk):
         except Exception as e:
             messagebox.showerror(_("Could not open run directory") + str(e))
 
-    def _on_press_choose_input_file(self):
+    def _on_press_choose_input_file(self) -> None:
         """Choose a new input file via a dialog and update settings if applicable."""
         cur_folder = self.conf.settings[Configuration.Keys.last_input_file_directory]
         cur_input_files = filedialog.askopenfilenames(
@@ -374,7 +375,7 @@ class VersionUpdaterWindow(Tk):
         if not cur_input_files:
             return
         self.conf.settings[Configuration.Keys.last_input_file_directory] = str(Path(cur_input_files[0]).parent)
-        file_paths = []
+        file_paths: list[Path] = []
         for cur_input_file in cur_input_files:
             cur_input_path = Path(cur_input_file)
             if cur_input_path.suffix == '.lst':
@@ -431,7 +432,7 @@ class VersionUpdaterWindow(Tk):
         self._executor.shutdown(wait=False)
         self._refresh_gui_state()
 
-    def _on_press_cancel(self):
+    def _on_press_cancel(self) -> None:
         self.button_cancel['state'] = DISABLED
         for thread in self.running_transition_threads:
             thread.stop()
@@ -445,22 +446,22 @@ class VersionUpdaterWindow(Tk):
 
     # region background thread callbacks and handlers
 
-    def _callback_on_increment(self):
+    def _callback_on_increment(self) -> None:
         self._gui_queue.put(self._on_increment)
 
-    def _on_increment(self):
+    def _on_increment(self) -> None:
         self._tk_var_progress.set(self._tk_var_progress.get() + 1)
 
-    def callback_on_msg(self, message: str):
+    def callback_on_msg(self, message: str) -> None:
         self._gui_queue.put(lambda: self.on_msg(message))
 
-    def on_msg(self, message: str):
+    def on_msg(self, message: str) -> None:
         self._tk_var_status.set(message)
 
-    def callback_on_done(self, message: str):
+    def callback_on_done(self, message: str) -> None:
         self._gui_queue.put(lambda: self.on_done(message))
 
-    def on_done(self, message: str):
+    def on_done(self, message: str) -> None:
         self._tk_var_status.set(message)
         self._threads_remaining -= 1
         if self._threads_remaining == 0:
@@ -473,7 +474,7 @@ class VersionUpdaterWindow(Tk):
     # region utility functions
 
     @staticmethod
-    def get_idf_version(path_to_idf: Path):
+    def get_idf_version(path_to_idf: Path) -> float | None:
         """Return the current version of a given input file.
 
         Uses a simplified parsing approach; only works for valid syntax files with no specialized error handling.
@@ -509,5 +510,6 @@ class VersionUpdaterWindow(Tk):
                 version_string_tokens = version_string.split('.')  # might be 2 or 3...
                 version_number = float("%s.%s" % (version_string_tokens[0], version_string_tokens[1]))
                 return version_number
+        return None
 
     # endregion

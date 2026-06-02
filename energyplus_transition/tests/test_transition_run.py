@@ -7,7 +7,7 @@ from energyplus_transition.transition_run_thread import TransitionRun
 
 
 class Test(TestCase):
-    def test_thread(self):
+    def test_thread(self) -> None:
         temp_file = Path(mktemp())
         temp_file.write_text("Hello")
         t = TransitionRun(

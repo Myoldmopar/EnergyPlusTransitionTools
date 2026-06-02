@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 import shutil
@@ -53,7 +54,7 @@ class TransitionBinary(object):
 
 
 @contextmanager
-def prepare_transition_directory(transitions: list[TransitionBinary]):
+def prepare_transition_directory(transitions: list[TransitionBinary]) -> Generator[Path, None, None]:
     """Create a temporary directory with all support files needed for the given transitions, deduplicating copies."""
     with tempfile.TemporaryDirectory() as tmp:
         run_dir = Path(tmp)

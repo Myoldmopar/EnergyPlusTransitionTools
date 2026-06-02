@@ -24,9 +24,9 @@ class TransitionRun:
     def __init__(self, input_file: Path, transition_list: list[TransitionBinary],
                  keep_old: bool, increment_callback: Callable,
                  msg_callback: Callable, done_callback: Callable):
-        self.p = None
-        self.std_out = None
-        self.std_err = None
+        self.p: subprocess.Popen[bytes] | None = None
+        self.std_out: bytes | None = None
+        self.std_err: bytes | None = None
         self.input_file = input_file
         self.transition_list = transition_list
         self.keep_old = keep_old
@@ -50,7 +50,7 @@ class TransitionRun:
             return False
         return True
 
-    def run(self):
+    def run(self) -> None:
         """Run the transition thread based on the parameters passed into the constructor.
 
         Intermittently calls msg_callback to alert the calling thread of status updates.
@@ -109,7 +109,7 @@ class TransitionRun:
         else:
             self.done_callback(_("All transitions completed successfully - Open run directory for transitioned file"))
 
-    def stop(self):
+    def stop(self) -> None:
         """Set the cancelled flag to attempt to kill the transition at the next step."""
         self.msg_callback(_("Attempting to cancel simulation ..."))
         self.cancelled = True
