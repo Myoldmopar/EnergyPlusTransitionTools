@@ -4,6 +4,7 @@ import textwrap
 from collections.abc import Generator
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 import pytest
 
@@ -22,7 +23,7 @@ FAKE_TRANSITION_SCRIPT = textwrap.dedent(
 
     # Determine target version from this script's name: Transition-VX-X-X-to-VY-Y-Y
     # (done early so we can use it in the audit content)
-    script_name = Path(sys.argv[0]).name
+    script_name = Path(sys.argv[0]).stem
     source_token = script_name.split('-V')[1].split('-to-')[0].split('-')
     target_token = script_name.split('-to-V')[1].split('-')
     source_version_str = f"{source_token[0]}.{source_token[1]}"
@@ -59,7 +60,7 @@ FAKE_TRANSITION_SCRIPT = textwrap.dedent(
 def _make_fake_transition_binary(transition_dir: Path, source_ver: str, target_ver: str) -> TransitionBinary:
     base_name = f"Transition-V{source_ver}-to-V{target_ver}"
     if sys.platform == "win32":
-        py_path = transition_dir / f"{base_name}.py"
+        py_path = transition_dir / f"python_{base_name}.py"
         py_path.write_text(FAKE_TRANSITION_SCRIPT.replace("#!/usr/bin/env python3\n", ""))
         binary_path = transition_dir / f"{base_name}.bat"
         binary_path.write_text(f'@echo off\n"{sys.executable}" "{py_path}" %*\n')
@@ -93,7 +94,14 @@ def fake_eplus_install() -> Generator:
         for source_ver, target_ver in versions:
             _make_fake_transition_binary(transition_dir, source_ver, target_ver)
 
-        return EnergyPlusPath(install_root=install_dir)
+        last_version = versions[-1][1].replace("-", ".")
+        with patch(
+            "energyplus_transition.energyplus_path.check_output",
+            return_value=f"EnergyPlus, Version {last_version}-abc123\n",
+        ):
+            eplus_install = EnergyPlusPath(install_root=install_dir)
+
+        return eplus_install
 
     yield _make
 
