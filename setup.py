@@ -27,7 +27,10 @@ setup(
     install_requires=install_requires,
     entry_points={
         'gui_scripts': ['energyplus_transition_gui=energyplus_transition.runner:main_gui'],
-        'console_scripts': ['energyplus_transition_configure=energyplus_transition.configure:configure_cli']
+        'console_scripts': [
+            'energyplus_transition_configure=energyplus_transition.configure:configure_cli',
+            'energyplus_transition=energyplus_transition.cli:main',
+        ]
     },
     classifiers=[
         'Development Status :: 4 - Beta',
