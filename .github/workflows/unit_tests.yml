@@ -20,7 +20,9 @@ jobs:
           python-version: 3.12
 
       - name: Install Pip Dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install tqdm
 
       - name: Run Tests
         run: coverage run -m pytest && coverage report

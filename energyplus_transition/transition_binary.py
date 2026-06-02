@@ -1,8 +1,8 @@
+import shutil
+import tempfile
 from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
-import shutil
-import tempfile
 
 
 class TransitionBinary(object):
@@ -23,17 +23,17 @@ class TransitionBinary(object):
 
     def __init__(self, full_path: Path):
         self.full_path_to_binary = full_path
-        self.binary_name = self.full_path_to_binary.name
-        split_by_v = self.binary_name.split('V')
-        source_token = split_by_v[1].split('-')
+        self.binary_name = self.full_path_to_binary.stem
+        split_by_v = self.binary_name.split("V")
+        source_token = split_by_v[1].split("-")
         source_string = f"{source_token[0]}.{source_token[1]}"
-        target_token = split_by_v[2].split('-')
+        target_token = split_by_v[2].split("-")
         target_string = f"{target_token[0]}.{target_token[1]}"
         self.source_version = float(source_string)
         self.target_version = float(target_string)
         idd_dir = self.full_path_to_binary.parent
-        source_ver_str = '-'.join(source_token[:3])
-        target_ver_str = '-'.join(target_token[:3])
+        source_ver_str = "-".join(source_token[:3])
+        target_ver_str = "-".join(target_token[:3])
         self.source_version_idd_path = idd_dir / f"V{source_ver_str}-Energy+.idd"
         self.target_version_idd_path = idd_dir / f"V{target_ver_str}-Energy+.idd"
         self.report_variables_path = idd_dir / f"Report Variables {source_ver_str} to {target_ver_str}.csv"
