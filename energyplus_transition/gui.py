@@ -129,6 +129,7 @@ class VersionUpdaterWindow(Tk):
         self.doing_restart = False
         self.update_running = False
         self.running_transition_threads: list[TransitionRun] = []
+        self._executor: ThreadPoolExecutor | None = None
         self._threads_remaining = 0
         self.selected_input_files: list[tuple[Path, float | None]] = []
 
@@ -424,16 +425,21 @@ class VersionUpdaterWindow(Tk):
         ]
         self._threads_remaining = len(self.running_transition_threads)
         self.update_running = True
-        executor = ThreadPoolExecutor(max_workers=cpu_count())
+        self._executor = ThreadPoolExecutor(max_workers=cpu_count())
         for thread in self.running_transition_threads:
-            executor.submit(thread.run)
-        executor.shutdown(wait=False)
+            self._executor.submit(thread.run)
+        self._executor.shutdown(wait=False)
         self._refresh_gui_state()
 
     def _on_press_cancel(self):
         self.button_cancel['state'] = DISABLED
         for thread in self.running_transition_threads:
             thread.stop()
+        if self._executor is not None:
+            # cancel_futures=True: cancel all pending futures that the executor has not started running.
+            # Any futures that are completed or running won’t be cancelled, regardless of the value of cancel_futures
+            self._executor.shutdown(wait=False, cancel_futures=True)
+            self._executor = None
 
     # endregion
 
