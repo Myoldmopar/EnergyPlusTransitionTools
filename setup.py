@@ -19,7 +19,7 @@ setup(
     url='https://github.com/myoldmopar/EnergyPlusTransitionTools',
     license='ModifiedBSD',
     packages=['energyplus_transition'],
-    package_data={"energyplus_transition": ["icons/*.png", "icons/*.ico", "icons/*.icns"],},
+    package_data={"energyplus_transition": ["icons/*.png", "icons/*.ico", "icons/*.icns"]},
     include_package_data=True,
     long_description=readme_contents,
     long_description_content_type='text/markdown',
