@@ -55,6 +55,8 @@ EnglishDictionary: dict[str, str] = {
     'Selected IDF: ': 'Selected Input File: ',
     'Transition Cancelled': 'Transition Cancelled',
     'Transition cancelled': 'Transition cancelled',
+    'Transition Failed! - Open run directory to read latest audit/error/etc':
+        'Transition Failed! - Open run directory to read latest audit/error/etc',
     'Unknown': 'Unknown',
     'You must restart the app to make the language change take effect.  Would you like to restart now?':
         'You must restart the app to make the language change take effect.  Would you like to restart now?'
@@ -105,6 +107,8 @@ SpanishDictionary: dict[str, str] = {
     'Selected Directory: ': 'Directorio seleccionado: ',
     'Selected IDF: ': 'Sélection de IDF: ',
     'Transition Cancelled': 'transición Cancelado',
+    'Transition Failed! - Open run directory to read latest audit/error/etc':
+        'Transición fallida - Abrir directorio de ejecución para leer el último audit/error/etc',
     'Transition cancelled': 'Transición cancelada',
     'Unknown': 'Desconocido',
     'You must restart the app to make the language change take effect.  Would you like to restart now?':
@@ -157,6 +161,8 @@ FrenchDictionary: dict[str, str] = {
     'Selected Directory: ': "Répertoire sélectionné : ",
     'Selected IDF: ': "IDF selectionné : ",
     'Transition Cancelled': 'Transition annulée',
+    'Transition Failed! - Open run directory to read latest audit/error/etc':
+        'Transition échouée - Ouvrez le répertoire pour lire le dernier audit/erreur/etc',
     'Transition cancelled': 'Transition annulée',
     'Unknown': 'Inconnu',
     'You must restart the app to make the language change take effect.  Would you like to restart now?':
