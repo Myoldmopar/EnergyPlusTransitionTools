@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from energyplus_transition.energyplus_path import EnergyPlusPath
 
@@ -17,17 +18,48 @@ class TestEnergyPlusPath(unittest.TestCase):
         found = EnergyPlusPath.try_to_auto_find()
         self.assertTrue(found is None or isinstance(found, Path))  # just check the interface
 
-    def test_parse_version(self) -> None:
-        valid = Path("/Applications/EnergyPlus-8-5-0")
-        version, _ = EnergyPlusPath.parse_version(path=valid, mute=True)
+    def test_auto_find_darwin(self) -> None:
+        with patch("energyplus_transition.energyplus_path.platform", "darwin"):
+            found = EnergyPlusPath.try_to_auto_find()
+            self.assertTrue(found is None or isinstance(found, Path))
+
+    def test_auto_find_windows(self) -> None:
+        with patch("energyplus_transition.energyplus_path.platform", "win32"):
+            found = EnergyPlusPath.try_to_auto_find()
+            self.assertTrue(found is None or isinstance(found, Path))
+
+    def test_parse_version_valid_mac(self) -> None:
+        eplus_root_path = Path("/Applications/EnergyPlus-8-5-0")
+        version, path = EnergyPlusPath.parse_version(path=eplus_root_path, mute=True)
         self.assertEqual(8.5, version)
-        invalid_no_dashes = Path("/Applications/EnergyPlus-TestBuild")
-        version, _ = EnergyPlusPath.parse_version(path=invalid_no_dashes, mute=True)
-        self.assertIsNone(version)
-        invalid_with_dashes = Path("/Applications/EnergyPlus-Test-Build-1")
-        version, _ = EnergyPlusPath.parse_version(path=invalid_with_dashes, mute=True)
+        self.assertEqual(eplus_root_path, path)
+
+    def test_parse_version_eplus_root_path_windows(self) -> None:
+        eplus_root_path = Path("C:/EnergyPlusV8-5-0")
+        version, path = EnergyPlusPath.parse_version(path=eplus_root_path, mute=True)
+        self.assertEqual(8.5, version)
+        self.assertEqual(eplus_root_path, path)
+
+    def test_parse_version_eplus_root_path_linux(self) -> None:
+        eplus_root_path = Path("/usr/local/EnergyPlus-8-5-0")
+        version, path = EnergyPlusPath.parse_version(path=eplus_root_path, mute=True)
+        self.assertEqual(8.5, version)
+        self.assertEqual(eplus_root_path, path)
+
+    def test_parse_version_invalid_no_dashes(self) -> None:
+        eplus_root_path = Path("/Applications/EnergyPlus-TestBuild")
+        version, _ = EnergyPlusPath.parse_version(path=eplus_root_path, mute=True)
         self.assertIsNone(version)
 
+    def test_parse_version_invalid_with_dashes(self) -> None:
+        eplus_root_path = Path("/Applications/EnergyPlus-Test-Build-1")
+        version, _ = EnergyPlusPath.parse_version(path=eplus_root_path, mute=True)
+        self.assertIsNone(version)
+
+    def test_parse_version_invalid_not_eplus(self) -> None:
+        eplus_root_path = Path("/Applications/SomethingElseCompletely-8-5-0")
+        version, _ = EnergyPlusPath.parse_version(path=eplus_root_path, mute=True)
+        self.assertIsNone(version)
 
 #     def test_proper_path_no_trailing_slash(self) -> None:
 #         eight_one = EnergyPlusPath('/Applications/EnergyPlus-8-1-0')

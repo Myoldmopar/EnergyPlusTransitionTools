@@ -55,7 +55,7 @@ class EnergyPlusPath(object):
 
     @staticmethod
     def parse_version(path: Path, mute: bool = False) -> tuple[Optional[float], Optional[Path]]:
-        just_version_suffix = path.name[10:]
+        just_version_suffix = path.name[10:]  # strip off "EnergyPlus"
         if just_version_suffix.startswith(('V', '-')):
             just_version_suffix = just_version_suffix[1:]
         version_tokens = just_version_suffix.split('-')
