@@ -6,13 +6,26 @@ from energyplus_transition.transition_binary import TransitionBinary
 
 class TestTransitionBinary(unittest.TestCase):
     def test_good_transition_object(self):
-        valid_path = "/Applications/EnergyPlus-8-5-0/PreProcess/IDFVersionUpdater/Transition-V8-5-0-to-V8-6-0"
-        valid_object = TransitionBinary(Path(valid_path))
-        self.assertEqual(valid_object.full_path_to_binary, Path(valid_path))
+        valid_path = Path("/Applications/EnergyPlus-8-5-0/PreProcess/IDFVersionUpdater/Transition-V8-5-0-to-V8-6-0")
+        valid_object = TransitionBinary(valid_path)
+        self.assertEqual(valid_object.full_path_to_binary, valid_path)
         self.assertEqual(valid_object.binary_name, "Transition-V8-5-0-to-V8-6-0")
         self.assertEqual(valid_object.source_version, 8.5)
         self.assertEqual(valid_object.target_version, 8.6)
         self.assertIsInstance(str(valid_object), str)
+
+        self.assertEqual(
+            valid_object.source_version_idd_path, valid_object.full_path_to_binary.parent / "V8-5-0-Energy+.idd"
+        )
+        self.assertEqual(
+            valid_object.target_version_idd_path, valid_object.full_path_to_binary.parent / "V8-6-0-Energy+.idd"
+        )
+        self.assertEqual(
+            valid_object.report_variables_path,
+            valid_object.full_path_to_binary.parent / "Report Variables 8-5-0 to 8-6-0.csv",
+        )
+        if not valid_path.exists():
+            self.assertFalse(valid_object.has_support_files())
 
     def test_transition_object_just_file_name(self):
         just_file_name = "Transition-V8-5-0-to-V8-6-0"
