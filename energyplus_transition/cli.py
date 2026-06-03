@@ -4,16 +4,11 @@ from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import cpu_count
 from pathlib import Path
 
+from tqdm import tqdm
+
 from energyplus_transition.energyplus_path import EnergyPlusPath
 from energyplus_transition.input_files import cleanup_transition_artifacts, get_selected_input_files
 from energyplus_transition.transition_run import TransitionRun
-
-try:
-    from tqdm import tqdm
-
-    TQDM_AVAILABLE = True
-except ImportError:  # pragma: no cover
-    TQDM_AVAILABLE = False
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -32,7 +27,7 @@ def get_parser() -> argparse.ArgumentParser:
         "-s", "--save-intermediate", action="store_true", help="Save intermediate versions during transitioning"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
-    parser.add_argument("-p", "--progress", action="store_true", help="Show a tqdm progress bar (requires tqdm)")
+    parser.add_argument("-p", "--progress", action="store_true", help="Show a tqdm progress bar")
     parser.add_argument(
         "-j", "--jobs", type=int, default=None, metavar="N", help="Number of parallel workers (default: number of CPUs)"
     )
@@ -51,12 +46,9 @@ def get_parser() -> argparse.ArgumentParser:
 class Runner:
     def __init__(self, verbose: bool = False, progress: bool = False, jobs: int | None = None):
         self.verbose = verbose
-        if progress and not TQDM_AVAILABLE:  # pragma: no cover
-            print("Warning: --progress requires tqdm (`pip install tqdm`), continuing without progress bar.")
-            progress = False
         self.progress = progress
         self.jobs = jobs if jobs is not None else cpu_count()
-        self.pbar: "tqdm | None" = None
+        self.pbar: tqdm | None = None
         # Number of Individual Transitions to run across all files, used for progress tracking
         self.progress_transitions = 0
         self.num_total_transitions = 0

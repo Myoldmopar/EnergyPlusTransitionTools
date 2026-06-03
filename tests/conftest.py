@@ -12,8 +12,7 @@ from energyplus_transition.energyplus_path import EnergyPlusPath
 from energyplus_transition.international import Language, set_language
 from energyplus_transition.transition_binary import TransitionBinary
 
-FAKE_TRANSITION_SCRIPT = textwrap.dedent(
-    """\
+FAKE_TRANSITION_SCRIPT = textwrap.dedent("""\
     #!/usr/bin/env python3
     import sys
     import re
@@ -53,8 +52,7 @@ FAKE_TRANSITION_SCRIPT = textwrap.dedent(
     idf_path.with_suffix('.idfold').write_text(content)
     idf_path.with_suffix('.idfnew').write_text(new_content)
     idf_path.write_text(new_content)
-"""
-)
+""")
 
 
 def _make_fake_transition_binary(transition_dir: Path, source_ver: str, target_ver: str) -> TransitionBinary:

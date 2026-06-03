@@ -9,3 +9,5 @@ wheel
 
 # for polishing up the Pip install
 PLAN-Tools>=0.5
+
+tqdm
