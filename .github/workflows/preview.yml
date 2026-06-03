@@ -20,6 +20,13 @@ jobs:
       with:
         python-version: 3.12
 
+    - name: Set dev version
+      run: |
+        VERSION=$(grep -oP '(?<=__version__ = ")[^"]+' energyplus_transition/__init__.py)
+        NEW_VERSION="${VERSION}.dev${GITHUB_RUN_NUMBER}"
+        echo "New version: ${NEW_VERSION}"
+        sed -i "s/__version__ = \".*\"/__version__ = \"${NEW_VERSION}\"/" energyplus_transition/__init__.py
+
     - name: Install build
       run: pip install build
 
