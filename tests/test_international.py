@@ -7,11 +7,14 @@ def test_missing_keys() -> None:
     assert not report_missing_keys(mute=True)
 
 
-@pytest.mark.parametrize("lang,expected_close", [
-    (Language.English, "Close"),
-    (Language.Spanish, "Cerca"),
-    (Language.French, "Fermer"),
-])
+@pytest.mark.parametrize(
+    "lang,expected_close",
+    [
+        (Language.English, "Close"),
+        (Language.Spanish, "Cerca"),
+        (Language.French, "Fermer"),
+    ],
+)
 def test_translation(lang: str, expected_close: str) -> None:
     set_language(lang=lang)
     assert translate(key=None) == ""  # type: ignore[arg-type]

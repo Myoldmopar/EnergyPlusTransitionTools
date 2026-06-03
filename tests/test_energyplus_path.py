@@ -61,6 +61,7 @@ class TestEnergyPlusPath(unittest.TestCase):
         version, _ = EnergyPlusPath.parse_version(path=eplus_root_path, mute=True)
         self.assertIsNone(version)
 
+
 #     def test_proper_path_no_trailing_slash(self) -> None:
 #         eight_one = EnergyPlusPath('/Applications/EnergyPlus-8-1-0')
 #         self.assertEqual(eight_one, '8-1-0')
