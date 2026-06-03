@@ -12,10 +12,14 @@ CurrentLanguage = Language.English
 EnglishDictionary: dict[str, str] = {
     "ABOUT_DIALOG": "This program was created by NLR for the United States Department of Energy.",
     "About...": "About...",
-    "All transitions completed successfully - Open run directory for transitioned file": "All transitions completed successfully - Open run directory for transitioned file",
+    "All transitions completed successfully - Open run directory for transitioned file": (
+        "All transitions completed successfully - Open run directory for transitioned file"
+    ),
     "Attempting to cancel simulation ...": "Attempting to cancel simulation ...",
     "Cancel Run": "Cancel Run",
-    "Cannot find a matching transition tool for this idf version": "Cannot find a matching transition tool for this idf version",
+    "Cannot find a matching transition tool for this idf version": (
+        "Cannot find a matching transition tool for this idf version"
+    ),
     "Choose E+ Folder...": "Choose E+ Folder...",
     "Choose EnergyPlus Install Root": "Choose EnergyPlus Install Root",
     "Choose File(s) to Update...": "Choose File(s) to Update...",
@@ -28,9 +32,13 @@ EnglishDictionary: dict[str, str] = {
     "Failed Transition": "Failed Transition",
     "File Details: ": "File Details: ",
     "File Path": "File Path",
-    "Cannot find a matching transition tool for one or more IDF versions": "Cannot find a matching transition tool for one or more IDF versions",
+    "Cannot find a matching transition tool for one or more IDF versions": (
+        "Cannot find a matching transition tool for one or more IDF versions"
+    ),
     "Files selected, ready to go": "Files selected, ready to go",
-    "IDF File doesn't exist at path given; cannot transition": "IDF File doesn't exist or invalid E+ install; cannot transition",
+    "IDF File doesn't exist at path given; cannot transition": (
+        "IDF File doesn't exist or invalid E+ install; cannot transition"
+    ),
     "IDF File exists, ready to go": "IDF File exists, ready to go",
     "IDF Path": "IDF Path",
     "IDF Selection": "IDF or LST Selection",
@@ -51,19 +59,29 @@ EnglishDictionary: dict[str, str] = {
     "Selected IDF: ": "Selected Input File: ",
     "Transition Cancelled": "Transition Cancelled",
     "Transition cancelled": "Transition cancelled",
-    "Transition Failed! - Open run directory to read latest audit/error/etc": "Transition Failed! - Open run directory to read latest audit/error/etc",
+    "Transition Failed! - Open run directory to read latest audit/error/etc": (
+        "Transition Failed! - Open run directory to read latest audit/error/etc"
+    ),
     "Unknown": "Unknown",
-    "You must restart the app to make the language change take effect.  Would you like to restart now?": "You must restart the app to make the language change take effect.  Would you like to restart now?",
+    "You must restart the app to make the language change take effect.  Would you like to restart now?": (
+        "You must restart the app to make the language change take effect.  Would you like to restart now?"
+    ),
 }
 
 SpanishDictionary: dict[str, str] = {
     "ABOUT_DIALOG": "Este programa fue creado por el NLR para el Departamento de Energia de los Estados Unidos.",
     "About...": "Acerca de...",
-    "All transitions completed successfully - Open run directory for transitioned file": "Todas las transiciones completada con éxito - Abrir directorio de ejecución para el archivo de la transición",
+    "All transitions completed successfully - Open run directory for transitioned file": (
+        "Todas las transiciones completada con éxito - Abrir directorio de ejecución para el archivo de la transición"
+    ),
     "Attempting to cancel simulation ...": "Intentando cancelar la simulación ...",
     "Cancel Run": "Cancelar Ejecutar",
-    "Cannot find a matching transition tool for one or more IDF versions": "No se puede encontrar una herramienta de transición para una o más versiones de IDF",
-    "Cannot find a matching transition tool for this idf version": "No se puede encontrar una herramienta de transición a juego para esta versión de la FID",
+    "Cannot find a matching transition tool for one or more IDF versions": (
+        "No se puede encontrar una herramienta de transición para una o más versiones de IDF"
+    ),
+    "Cannot find a matching transition tool for this idf version": (
+        "No se puede encontrar una herramienta de transición a juego para esta versión de la FID"
+    ),
     "Choose E+ Folder...": "Elige E+ Carpeta...",
     "Choose EnergyPlus Install Root": "Elija raíz de instalación de EnergyPlus",
     "Choose File(s) to Update...": "Elegir archivo(s) para actualizar...",
@@ -77,7 +95,9 @@ SpanishDictionary: dict[str, str] = {
     "File Details: ": "Detalles del archivo: ",
     "File Path": "Ruta de archivo",
     "Files selected, ready to go": "Archivos seleccionados, listos para continuar",
-    "IDF File doesn't exist at path given; cannot transition": "IDF El archivo no existe en la ruta dada; no puede transición",
+    "IDF File doesn't exist at path given; cannot transition": (
+        "IDF El archivo no existe en la ruta dada; no puede transición"
+    ),
     "IDF File exists, ready to go": "existe IDF del archivo, listo para ir",
     "IDF Path": "Ruta IDF",
     "IDF Selection": "IDF Selección",
@@ -97,16 +117,24 @@ SpanishDictionary: dict[str, str] = {
     "Selected Directory: ": "Directorio seleccionado: ",
     "Selected IDF: ": "Sélection de IDF: ",
     "Transition Cancelled": "transición Cancelado",
-    "Transition Failed! - Open run directory to read latest audit/error/etc": "Transición fallida - Abrir directorio de ejecución para leer el último audit/error/etc",
+    "Transition Failed! - Open run directory to read latest audit/error/etc": (
+        "Transición fallida - Abrir directorio de ejecución para leer el último audit/error/etc"
+    ),
     "Transition cancelled": "Transición cancelada",
     "Unknown": "Desconocido",
-    "You must restart the app to make the language change take effect.  Would you like to restart now?": "Debe reiniciar la aplicacion para que el cambio de idioma tenga efecto. Le gustaria reiniciar ahora?",
+    "You must restart the app to make the language change take effect.  Would you like to restart now?": (
+        "Debe reiniciar la aplicacion para que el cambio de idioma tenga efecto. Le gustaria reiniciar ahora?"
+    ),
 }
 
 FrenchDictionary: dict[str, str] = {
-    "ABOUT_DIALOG": "Ce logiciel a été créé par NLR pour le Departement de l'Energie des Etats Unis d'Amérique (US DOE)",
+    "ABOUT_DIALOG": (
+        "Ce logiciel a été créé par NLR pour le Departement de l'Energie des Etats Unis d'Amérique (US DOE)"
+    ),
     "About...": "A propos...",
-    "All transitions completed successfully - Open run directory for transitioned file": "Toutes les transitions effectuées avec succès - Ouvrir le répertoire du fichier mis à jour",
+    "All transitions completed successfully - Open run directory for transitioned file": (
+        "Toutes les transitions effectuées avec succès - Ouvrir le répertoire du fichier mis à jour"
+    ),
     "Attempting to cancel simulation ...": "Tentative d'annulation de la simulation ...",
     "Cancel Run": "Annuler l'éxécution",
     "Choose E+ Folder...": "Choisir le dossier d'E+...",
@@ -122,7 +150,9 @@ FrenchDictionary: dict[str, str] = {
     "File Details: ": "Détails du fichier : ",
     "File Path": "Chemin du fichier",
     "Files selected, ready to go": "Fichiers sélectionnés, prêt à démarrer",
-    "IDF File doesn't exist at path given; cannot transition": "IDF fichier n'existe pas au chemin donné; transition impossible",
+    "IDF File doesn't exist at path given; cannot transition": (
+        "IDF fichier n'existe pas au chemin donné; transition impossible"
+    ),
     "IDF File exists, ready to go": "Le fichier IDF existe, prêt.",
     "IDF Path": "Chemin IDF",
     "IDF Selection": "Sélection de l'IDF",
@@ -136,18 +166,26 @@ FrenchDictionary: dict[str, str] = {
     "Old Version": "Ancienne version",
     "Open File for Transition": "Ouvrir un fichier pour la transition",
     "Open Directory": "Ouvrir le Dossier",
-    "Cannot find a matching transition tool for one or more IDF versions": "Impossible de trouver un utilitaire de Transition pour une ou plusieurs versions d'IDF",
-    "Cannot find a matching transition tool for this idf version": "Impossible de trouver un utilitaire de Transition pour cette version d'IDF",
+    "Cannot find a matching transition tool for one or more IDF versions": (
+        "Impossible de trouver un utilitaire de Transition pour une ou plusieurs versions d'IDF"
+    ),
+    "Cannot find a matching transition tool for this idf version": (
+        "Impossible de trouver un utilitaire de Transition pour cette version d'IDF"
+    ),
     "Program Initialized": "Programme initialisé",
     "Run Transition": "Lancer la transition",
     "Running Transition": "Transition en cours",
     "Selected Directory: ": "Répertoire sélectionné : ",
     "Selected IDF: ": "IDF selectionné : ",
     "Transition Cancelled": "Transition annulée",
-    "Transition Failed! - Open run directory to read latest audit/error/etc": "Transition échouée - Ouvrez le répertoire pour lire le dernier audit/erreur/etc",
+    "Transition Failed! - Open run directory to read latest audit/error/etc": (
+        "Transition échouée - Ouvrez le répertoire pour lire le dernier audit/erreur/etc"
+    ),
     "Transition cancelled": "Transition annulée",
     "Unknown": "Inconnu",
-    "You must restart the app to make the language change take effect.  Would you like to restart now?": "Vous devez relancer le logiciel pour effectuer le changement de langue. Voulez-vous relancer maintenant?",
+    "You must restart the app to make the language change take effect.  Would you like to restart now?": (
+        "Vous devez relancer le logiciel pour effectuer le changement de langue. Voulez-vous relancer maintenant?"
+    ),
 }
 
 
