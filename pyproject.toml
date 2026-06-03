@@ -77,6 +77,17 @@ ensure_newline_before_comments = true
 line_length = 120
 skip_gitignore = true
 
+[tool.coverage.run]
+source = ["energyplus_transition"]
+
+[tool.coverage.report]
+omit = [
+    "*/energyplus_transition/__main__.py",
+    "*/energyplus_transition/gui.py",
+    "*/energyplus_transition/runner.py",
+    "*/energyplus_transition/configure.py",
+]
+
 [tool.pytest.ini_options]
 addopts = "--cov=energyplus_transition --cov-branch --cov-report=term-missing --cov-report=xml"
 
