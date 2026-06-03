@@ -1,2 +1,2 @@
 NAME = "energyplus_transition_tools"
-VERSION = "2.1.5"
+__version__ = "2.1.5"

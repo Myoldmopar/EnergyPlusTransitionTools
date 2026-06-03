@@ -3,7 +3,7 @@ from platform import system
 
 from setuptools import setup
 
-from energyplus_transition import NAME, VERSION
+from energyplus_transition import NAME, __version__
 
 readme_file = Path(__file__).parent.resolve() / "README.md"
 readme_contents = readme_file.read_text()
@@ -14,7 +14,7 @@ if system() == "Windows":
 
 setup(
     name=NAME,
-    version=VERSION,
+    version=__version__,
     description="A library and tkinter-based tool for transitioning EnergyPlus input files",
     url="https://github.com/myoldmopar/EnergyPlusTransitionTools",
     license="ModifiedBSD",

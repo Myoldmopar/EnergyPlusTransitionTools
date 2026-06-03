@@ -36,7 +36,7 @@ from typing import Any
 
 from plan_tools.runtime import fixup_taskbar_icon_on_windows  # type: ignore
 
-from energyplus_transition import NAME, VERSION
+from energyplus_transition import NAME, __version__
 from energyplus_transition.energyplus_path import EnergyPlusPath
 from energyplus_transition.input_files import InputFile, get_selected_input_files
 from energyplus_transition.international import Language, set_language
@@ -164,7 +164,7 @@ class VersionUpdaterWindow(Tk):
         # build up the GUI itself
         self._define_tk_variables()
         self._build_gui()
-        self.title(f"IDF Version Updater ({VERSION})")
+        self.title(f"IDF Version Updater ({__version__})")
 
         # update the list of E+ versions
         self._refresh_for_new_eplus_install()
