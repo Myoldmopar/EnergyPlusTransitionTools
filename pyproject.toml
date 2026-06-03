@@ -75,3 +75,9 @@ use_parentheses = true
 ensure_newline_before_comments = true
 line_length = 120
 skip_gitignore = true
+
+[tool.pytest.ini_options]
+addopts = "--cov=energyplus_transition --cov-branch --cov-report=term-missing --cov-report=xml"
+
+[tool.mypy]
+disallow_untyped_defs = true
