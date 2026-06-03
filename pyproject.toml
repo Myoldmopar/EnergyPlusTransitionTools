@@ -53,7 +53,7 @@ energyplus_transition = "energyplus_transition.cli:main"
 energyplus_transition_configure = "energyplus_transition.configure:configure_cli"
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov", "black", "flake8", "mypy", "isort", "coveralls", "wheel", "bump2version", "pre-commit"]
+dev = ["pytest", "pytest-cov", "black", "flake8", "mypy", "isort", "coveralls", "wheel", "bump2version", "pre-commit", "types-tqdm"]
 
 [tool.setuptools.dynamic]
 version = {attr = "energyplus_transition.__version__"}
