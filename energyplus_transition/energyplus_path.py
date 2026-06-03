@@ -1,7 +1,8 @@
 from pathlib import Path
-from subprocess import check_output, CalledProcessError
+from subprocess import CalledProcessError, check_output
 from sys import platform
 from typing import List, Optional
+
 from energyplus_transition.transition_binary import TransitionBinary
 
 
@@ -32,23 +33,23 @@ class EnergyPlusPath(object):
         if not self.install_root.exists():
             return
 
-        energyplus_exe = self.install_root / 'energyplus'
+        energyplus_exe = self.install_root / "energyplus"
         if not energyplus_exe.is_file():
             return
 
-        self.transition_directory = self.install_root / 'PreProcess' / 'IDFVersionUpdater'
+        self.transition_directory = self.install_root / "PreProcess" / "IDFVersionUpdater"
         if not self.transition_directory.is_dir():
             # Developer build
             self.transition_directory = self.install_root
 
-        binary_paths = list(self.transition_directory.glob('Transition-V*'))
+        binary_paths = list(self.transition_directory.glob("Transition-V*"))
         self.transitions_available = [tb for x in binary_paths if (tb := TransitionBinary(x)).has_support_files()]
         self.transitions_available.sort(key=lambda tb: tb.source_version)
         try:
-            string_version_output = check_output([str(energyplus_exe), '-v'], text=True, encoding='utf-8')
-            version_token = string_version_output.split(',')[1].strip()
-            version_description = version_token.split(' ')[1]
-            self.version = version_description.split('-')[0]
+            string_version_output = check_output([str(energyplus_exe), "-v"], text=True, encoding="utf-8")
+            version_token = string_version_output.split(",")[1].strip()
+            version_description = version_token.split(" ")[1]
+            self.version = version_description.split("-")[0]
             self.valid_install = True
         except CalledProcessError:
             pass
@@ -56,9 +57,9 @@ class EnergyPlusPath(object):
     @staticmethod
     def parse_version(path: Path, mute: bool = False) -> tuple[Optional[float], Optional[Path]]:
         just_version_suffix = path.name[10:]  # strip off "EnergyPlus"
-        if just_version_suffix.startswith(('V', '-')):
+        if just_version_suffix.startswith(("V", "-")):
             just_version_suffix = just_version_suffix[1:]
-        version_tokens = just_version_suffix.split('-')
+        version_tokens = just_version_suffix.split("-")
         if len(version_tokens) < 2:
             if not mute:  # pragma: no cover
                 print(f"Skipping install at: {path}")
@@ -73,22 +74,24 @@ class EnergyPlusPath(object):
     @staticmethod
     def try_to_auto_find() -> Optional[Path]:
         if platform.startswith("linux"):
-            install_bases = [Path('/usr/local'), Path('/eplus/installs/')]
+            install_bases = [Path("/usr/local"), Path("/eplus/installs/")]
         elif platform == "darwin":
-            install_bases = [Path('/Applications')]
+            install_bases = [Path("/Applications")]
         else:  # assuming windows
-            install_bases = [Path(r'C:/')]
+            install_bases = [Path(r"C:/")]
         eplus_install_dirs = []
         for base in install_bases:
-            eplus_install_dirs.extend(list(base.glob('EnergyPlus*')))
+            eplus_install_dirs.extend(list(base.glob("EnergyPlus*")))
         # not covering either one of these paths
         if len(eplus_install_dirs) == 0:  # pragma: no cover
             return None
         return max(
             (EnergyPlusPath.parse_version(path=p) for p in eplus_install_dirs),
             key=lambda x: x[0] if x[0] is not None else -1,
-            default=(None, None)
-        )[1]  # pragma: no cover
+            default=(None, None),
+        )[
+            1
+        ]  # pragma: no cover
 
     def __str__(self) -> str:
         return f"E+Install ({'valid' if self.valid_install else 'invalid'}) : {self.install_root}"

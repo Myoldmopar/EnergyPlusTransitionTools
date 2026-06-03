@@ -32,28 +32,28 @@ from energyplus_transition import NAME, VERSION  # noqa: E402
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.coverage',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.coverage",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 # source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
 project = NAME
-copyright = u'2016, Edwin Lee, NREL, DOE'
-author = u'Edwin Lee, NREL, DOE'
+copyright = "2016, Edwin Lee, NREL, DOE"
+author = "Edwin Lee, NREL, DOE"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -69,7 +69,7 @@ release = VERSION
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'en'
+language = "en"
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -79,7 +79,7 @@ language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = ["_build"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -97,7 +97,7 @@ exclude_patterns = ['_build']
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -112,7 +112,7 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'nature'
+html_theme = "nature"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -141,7 +141,7 @@ html_theme = 'nature'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -204,20 +204,17 @@ html_static_path = ['_static']
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'EnergyPlusTransitionToolsDoc'
+htmlhelp_basename = "EnergyPlusTransitionToolsDoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements: dict[str, str] = {
     # The paper size ('letterpaper' or 'a4paper').
     # 'papersize': 'letterpaper',
-
     # The font size ('10pt', '11pt' or '12pt').
     # 'pointsize': '10pt',
-
     # Additional stuff for the LaTeX preamble.
     # 'preamble': '',
-
     # Latex figure (float) alignment
     # 'figure_align': 'htbp',
 }
@@ -226,8 +223,13 @@ latex_elements: dict[str, str] = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'EnergyPlusTransitionTools.tex', u'EnergyPlusTransitionTools Documentation',
-     u'Edwin Lee, NREL, DOE', 'manual'),
+    (
+        master_doc,
+        "EnergyPlusTransitionTools.tex",
+        "EnergyPlusTransitionTools Documentation",
+        "Edwin Lee, NREL, DOE",
+        "manual",
+    ),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -255,10 +257,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'energyplus_transition_tools', u'EnergyPlusTransitionTools Documentation',
-     [author], 1)
-]
+man_pages = [(master_doc, "energyplus_transition_tools", "EnergyPlusTransitionTools Documentation", [author], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -270,9 +269,15 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'EnergyPlusTransitionTools', u'EnergyPlusTransitionTools Documentation',
-     author, 'EnergyPlusTransitionTools', 'A library for helping transition up EnergyPlus input files.',
-     'Miscellaneous'),
+    (
+        master_doc,
+        "EnergyPlusTransitionTools",
+        "EnergyPlusTransitionTools Documentation",
+        author,
+        "EnergyPlusTransitionTools",
+        "A library for helping transition up EnergyPlus input files.",
+        "Miscellaneous",
+    ),
 ]
 
 # Documents to append as an appendix to all manuals.
