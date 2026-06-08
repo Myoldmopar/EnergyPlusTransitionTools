@@ -9,6 +9,11 @@ jobs:
   release:
     runs-on: ubuntu-24.04
 
+    environment: pypi
+
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+
     steps:
     - uses: actions/checkout@v6
 
@@ -26,5 +31,5 @@ jobs:
     - name: Deploy on PyPi
       uses: pypa/gh-action-pypi-publish@37f50c210e3d2f9450da2cd423303d6a14a6e29f  # v1.5.1
       with:
-        user: __token__
-        password: ${{ secrets.PYPIPW }}
+        skip-existing: true
+        verbose: true
