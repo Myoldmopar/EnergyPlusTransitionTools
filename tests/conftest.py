@@ -83,7 +83,7 @@ def fake_eplus_install() -> Generator:
         tmp_dirs.append(tmp)
         install_dir = Path(tmp.name)
 
-        energyplus_exe = install_dir / "energyplus"
+        energyplus_exe = install_dir / ("energyplus.exe" if sys.platform == "win32" else "energyplus")
         energyplus_exe.write_text("#!/bin/sh\necho 'EnergyPlus, Version 25.1.0-abc123'\n")
         energyplus_exe.chmod(energyplus_exe.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
 
