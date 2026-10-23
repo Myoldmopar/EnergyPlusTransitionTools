@@ -33,7 +33,7 @@ class EnergyPlusPath(object):
         if not self.install_root.exists():
             return
 
-        energyplus_exe = self.install_root / "energyplus"
+        energyplus_exe = self.install_root / ("energyplus.exe" if platform == "win32" else "energyplus")
         if not energyplus_exe.is_file():
             return
 
