@@ -1,6 +1,9 @@
+import sys
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+
+from pytest import MonkeyPatch
 
 from energyplus_transition.energyplus_path import EnergyPlusPath
 
@@ -114,3 +117,16 @@ class TestEnergyPlusPath(unittest.TestCase):
 
 class TestGetTransitionsAvailable(unittest.TestCase):
     pass  # we'd have to install E+ on the test machine...
+
+
+def test_relative_install_root_runs_selected_energyplus(monkeypatch: MonkeyPatch, tmp_path: Path) -> None:
+    exe_name = "energyplus.exe" if sys.platform == "win32" else "energyplus"
+    (tmp_path / exe_name).touch()
+    monkeypatch.chdir(tmp_path)
+    with patch(
+        "energyplus_transition.energyplus_path.check_output", return_value="EnergyPlus, Version 25.1.0-abc123\n"
+    ) as mock_check_output:
+        ep = EnergyPlusPath(install_root=Path("."))
+    assert ep.install_root.is_absolute()
+    assert ep.valid_install
+    assert mock_check_output.call_args.args[0] == [str(Path.cwd() / exe_name), "-v"]

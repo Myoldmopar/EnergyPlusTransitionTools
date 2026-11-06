@@ -2,6 +2,8 @@ from pathlib import Path
 from tempfile import TemporaryDirectory, mktemp
 from unittest.mock import MagicMock, patch
 
+from pytest import MonkeyPatch
+
 from energyplus_transition.input_files import get_idf_version
 from energyplus_transition.transition_binary import TransitionBinary
 from energyplus_transition.transition_run import TransitionRun
@@ -33,6 +35,25 @@ def test_cancelled_flag() -> None:
     assert not t.cancelled
     t.stop()
     assert t.cancelled
+
+
+def test_relative_input_file(monkeypatch: MonkeyPatch, fake_eplus_install: FakeEplusInstall, tmp_path: Path) -> None:
+    eplus = fake_eplus_install([("24-1-0", "24-2-0")])
+    idf = tmp_path / "test.idf"
+    idf.write_text("Version,24.1;")
+    monkeypatch.chdir(tmp_path)
+
+    t = TransitionRun(
+        input_file=Path("test.idf"),
+        transition_list=eplus.transitions_available,
+        keep_old=False,
+        increment_callback=lambda: None,
+        msg_callback=lambda x: None,
+        done_callback=lambda x: None,
+    )
+    assert t.input_file.is_absolute()
+    t.run()
+    assert get_idf_version(idf) == 24.2
 
 
 def test_callbacks(fake_eplus_install: FakeEplusInstall) -> None:

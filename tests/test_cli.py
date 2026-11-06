@@ -99,28 +99,52 @@ def test_runner_collect_runs_save_intermediate(fake_eplus_install: FakeEplusInst
         assert r.runs[0].keep_old is True
 
 
-def test_main_no_eplus_dir_found(monkeypatch: MonkeyPatch) -> None:
+def test_main_no_eplus_dir_found(monkeypatch: MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setattr("energyplus_transition.cli.EnergyPlusPath.try_to_auto_find", lambda: None)
+    idf = tmp_path / "some.idf"
+    idf.write_text("Version,24.1;")
     with pytest.raises(RuntimeError, match="Could not find"):
-        main(["some.idf"])
+        main([str(idf)])
 
 
-def test_main_invalid_eplus_dir() -> None:
+def test_main_invalid_eplus_dir(tmp_path: Path) -> None:
+    idf = tmp_path / "some.idf"
+    idf.write_text("Version,24.1;")
     with pytest.raises(ValueError, match="Invalid EnergyPlus"):
-        main(["some.idf", "--eplus-dir", "/nonexistent/path"])
+        main([str(idf), "--eplus-dir", str(tmp_path)])
 
 
-def test_main_no_valid_files(capsys: CaptureFixture[str], fake_eplus_install: FakeEplusInstall) -> None:
+def test_main_nonexistent_eplus_dir(capsys: CaptureFixture[str], tmp_path: Path) -> None:
+    idf = tmp_path / "some.idf"
+    idf.write_text("Version,24.1;")
+    with pytest.raises(SystemExit) as exc_info:
+        main([str(idf), "--eplus-dir", str(tmp_path / "nonexistent")])
+    assert exc_info.value.code == 2
+    assert "is not a valid directory" in capsys.readouterr().err
+
+
+def test_main_nonexistent_input_file(capsys: CaptureFixture[str], tmp_path: Path) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        main([str(tmp_path / "nonexistent.idf"), "--eplus-dir", str(tmp_path)])
+    assert exc_info.value.code == 2
+    assert "is not a valid file" in capsys.readouterr().err
+
+
+def test_main_no_valid_files(capsys: CaptureFixture[str], fake_eplus_install: FakeEplusInstall, tmp_path: Path) -> None:
     eplus = fake_eplus_install([("24-1-0", "24-2-0")])
-    main(["nonexistent.idf", "--eplus-dir", str(eplus.install_root)])
+    lst = tmp_path / "files.lst"
+    lst.write_text("nonexistent.idf\n")
+    main([str(lst), "--eplus-dir", str(eplus.install_root)])
     assert "No valid input files" in capsys.readouterr().out
 
 
 def test_main_to_version_no_matching_transitions(
-    capsys: CaptureFixture[str], fake_eplus_install: FakeEplusInstall
+    capsys: CaptureFixture[str], fake_eplus_install: FakeEplusInstall, tmp_path: Path
 ) -> None:
     eplus = fake_eplus_install([("24-1-0", "24-2-0")])
-    main(["some.idf", "--eplus-dir", str(eplus.install_root), "--to-version", "23.1"])
+    idf = tmp_path / "some.idf"
+    idf.write_text("Version,24.1;")
+    main([str(idf), "--eplus-dir", str(eplus.install_root), "--to-version", "23.1"])
     assert "No transitions available" in capsys.readouterr().out
 
 
@@ -140,6 +164,27 @@ def test_main_full_run(fake_eplus_install: FakeEplusInstall) -> None:
         idf = Path(tmp) / "test.idf"
         idf.write_text("Version,24.1;")
         main([str(idf), "--eplus-dir", str(eplus.install_root)])
+        assert get_idf_version(idf) == 25.1
+
+
+def test_main_relative_idf_path(monkeypatch: MonkeyPatch, fake_eplus_install: FakeEplusInstall, tmp_path: Path) -> None:
+    eplus = fake_eplus_install([("24-1-0", "24-2-0"), ("24-2-0", "25-1-0")])
+    idf = tmp_path / "test.idf"
+    idf.write_text("Version,24.1;")
+    monkeypatch.chdir(tmp_path)
+    main(["test.idf", "--eplus-dir", str(eplus.install_root), "--save-intermediate"])
+    assert get_idf_version(idf) == 25.1
+    assert (tmp_path / "test_24.1.idf").is_file()
+    assert (tmp_path / "test_Transition.audit").is_file()
+
+
+def test_main_relative_eplus_dir(monkeypatch: MonkeyPatch, fake_eplus_install: FakeEplusInstall) -> None:
+    eplus = fake_eplus_install([("24-1-0", "24-2-0"), ("24-2-0", "25-1-0")])
+    with TemporaryDirectory() as tmp:
+        idf = Path(tmp) / "test.idf"
+        idf.write_text("Version,24.1;")
+        monkeypatch.chdir(eplus.install_root.parent)
+        main([str(idf), "--eplus-dir", eplus.install_root.name])
         assert get_idf_version(idf) == 25.1
 
 

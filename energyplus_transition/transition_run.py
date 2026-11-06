@@ -34,7 +34,7 @@ class TransitionRun:
         self.p: subprocess.Popen[bytes] | None = None
         self.std_out: bytes | None = None
         self.std_err: bytes | None = None
-        self.input_file = input_file
+        self.input_file = Path(input_file).absolute()
         self.transition_list = transition_list
         self.keep_old = keep_old
         self.increment_callback = increment_callback

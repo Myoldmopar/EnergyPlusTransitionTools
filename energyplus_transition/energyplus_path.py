@@ -19,7 +19,7 @@ class EnergyPlusPath(object):
     """
 
     def __init__(self, install_root: Path):
-        self.install_root = Path(install_root)
+        self.install_root = Path(install_root).absolute()
         # initialize values assuming it is broken
         self.valid_install = False
         self.transition_directory: Optional[Path] = None
