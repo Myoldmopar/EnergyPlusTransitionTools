@@ -13,7 +13,7 @@ class TransitionBinary(object):
 
     :param full_path: Full path object to the transition binary itself
 
-    :ivar full_path_to_binary: Copy of the full path to binary passed into the constructor
+    :ivar full_path_to_binary: Absolute path to the binary, as it is run from a temporary directory
     :ivar binary_name: This is just the filename portion of the binary executable
     :ivar source_version: This is the source version of this particular transition, for example,
                           in V8-5-0-to-8-6-0, this will be 8.5
@@ -22,7 +22,7 @@ class TransitionBinary(object):
     """
 
     def __init__(self, full_path: Path):
-        self.full_path_to_binary = full_path
+        self.full_path_to_binary = Path(full_path).absolute()
         self.binary_name = self.full_path_to_binary.stem
         split_by_v = self.binary_name.split("V")
         source_token = split_by_v[1].split("-")
