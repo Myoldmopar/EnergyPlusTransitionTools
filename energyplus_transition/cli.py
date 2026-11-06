@@ -11,14 +11,36 @@ from energyplus_transition.input_files import cleanup_transition_artifacts, get_
 from energyplus_transition.transition_run import TransitionRun
 
 
+def argparse_type_valid_absolute_file(path_str: str) -> Path:
+    """Argparse type to check for a valid file and convert to absolute path."""
+    path = Path(path_str).resolve()
+    if not path.is_file():
+        raise argparse.ArgumentTypeError(f"'{path}' is not a valid file")
+    return path
+
+
+def argparse_type_valid_absolute_dir(path_str: str) -> Path:
+    """Argparse type to check for a valid directory and convert to absolute path."""
+    path = Path(path_str).resolve()
+    if not path.is_dir():
+        raise argparse.ArgumentTypeError(f"'{path}' is not a valid directory")
+    return path
+
+
 def get_parser() -> argparse.ArgumentParser:
 
     parser = argparse.ArgumentParser(description="Transition EnergyPlus IDF files to a newer version")
-    parser.add_argument("idf_files", nargs="+", type=Path, metavar="IDF_FILE", help="IDF/IMF/lst file(s) to transition")
+    parser.add_argument(
+        "idf_files",
+        nargs="+",
+        type=argparse_type_valid_absolute_file,
+        metavar="IDF_FILE",
+        help="IDF/IMF/lst file(s) to transition",
+    )
     parser.add_argument(
         "-e",
         "--eplus-dir",
-        type=Path,
+        type=argparse_type_valid_absolute_dir,
         default=None,
         metavar="DIR",
         help="EnergyPlus installation directory (auto-detected if omitted)",
