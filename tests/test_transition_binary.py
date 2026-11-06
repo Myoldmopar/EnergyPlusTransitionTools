@@ -22,7 +22,7 @@ class TestTransitionBinary(unittest.TestCase):
     def test_good_transition_object(self) -> None:
         valid_path = Path("/Applications/EnergyPlus-8-5-0/PreProcess/IDFVersionUpdater/Transition-V8-5-0-to-V8-6-0")
         valid_object = TransitionBinary(valid_path)
-        self.assertEqual(valid_object.full_path_to_binary, valid_path)
+        self.assertEqual(valid_object.full_path_to_binary, valid_path.absolute())
         self.assertEqual(valid_object.binary_name, "Transition-V8-5-0-to-V8-6-0")
         self.assertEqual(valid_object.source_version, 8.5)
         self.assertEqual(valid_object.target_version, 8.6)

@@ -167,16 +167,15 @@ def test_main_full_run(fake_eplus_install: FakeEplusInstall) -> None:
         assert get_idf_version(idf) == 25.1
 
 
-def test_main_relative_idf_path(monkeypatch: MonkeyPatch, fake_eplus_install: FakeEplusInstall) -> None:
+def test_main_relative_idf_path(monkeypatch: MonkeyPatch, fake_eplus_install: FakeEplusInstall, tmp_path: Path) -> None:
     eplus = fake_eplus_install([("24-1-0", "24-2-0"), ("24-2-0", "25-1-0")])
-    with TemporaryDirectory() as tmp:
-        idf = Path(tmp) / "test.idf"
-        idf.write_text("Version,24.1;")
-        monkeypatch.chdir(tmp)
-        main(["test.idf", "--eplus-dir", str(eplus.install_root), "--save-intermediate"])
-        assert get_idf_version(idf) == 25.1
-        assert (Path(tmp) / "test_24.1.idf").is_file()
-        assert (Path(tmp) / "test_Transition.audit").is_file()
+    idf = tmp_path / "test.idf"
+    idf.write_text("Version,24.1;")
+    monkeypatch.chdir(tmp_path)
+    main(["test.idf", "--eplus-dir", str(eplus.install_root), "--save-intermediate"])
+    assert get_idf_version(idf) == 25.1
+    assert (tmp_path / "test_24.1.idf").is_file()
+    assert (tmp_path / "test_Transition.audit").is_file()
 
 
 def test_main_relative_eplus_dir(monkeypatch: MonkeyPatch, fake_eplus_install: FakeEplusInstall) -> None:
